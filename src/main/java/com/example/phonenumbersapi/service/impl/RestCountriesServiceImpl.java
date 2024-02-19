@@ -1,4 +1,4 @@
-package com.example.phonenumbersapi.service.Impl;
+package com.example.phonenumbersapi.service.impl;
 
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.entity.RestCountriesApiResponse;
@@ -21,8 +21,7 @@ public class RestCountriesServiceImpl implements RestCountriesService {
         ResponseEntity<RestCountriesApiResponse[]> responseEntity = restTemplate.getForEntity(apiUrl, RestCountriesApiResponse[].class);
         return Objects.requireNonNull(responseEntity.getBody())[0].getIdd();
 
-        //вывод был(phoneNumberCode);
-        //вывод был (apiUrl);
+
     }
 
 }
