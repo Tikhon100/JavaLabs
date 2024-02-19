@@ -14,7 +14,7 @@ public class PhoneNumberCodeController {
     private final RestCountriesService restCountriesService;
 
     @GetMapping("/country/{country}")
-    public ResponseEntity<?> getPhoneNumberCodeByCountry(@PathVariable("country") String country) {
+    public ResponseEntity<PhoneNumberCode> getPhoneNumberCodeByCountry(@PathVariable("country") String country) {
         PhoneNumberCode phoneNumberCode = restCountriesService.getPhoneNumberCode(country);
 
         return ResponseEntity.ok(phoneNumberCode);
