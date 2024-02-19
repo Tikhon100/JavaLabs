@@ -18,6 +18,7 @@ public class RestCountriesServiceImpl implements RestCountriesService {
 
         RestTemplate restTemplate = new RestTemplate();
 
+
         ResponseEntity<RestCountriesApiResponse[]> responseEntity = restTemplate.getForEntity(apiUrl, RestCountriesApiResponse[].class);
         return Objects.requireNonNull(responseEntity.getBody())[0].getIdd();
 
