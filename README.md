@@ -12,6 +12,6 @@
 **Использование веб-интерфейса:** После успешного запуска приложения откройте веб-браузер и перейдите по адресу http://localhost:8080/api/v1/phone-number/country/{country}, вместо {country} введите название страны, 
 и в ответ сервис пришлет вам idd страны в виде json
 
-**Ссылка на проект на SonarCloud**
+**Ссылка на SonarCloud проекта**
 https://sonarcloud.io/project/overview?id=Tikhon100_JavaLabs
 
