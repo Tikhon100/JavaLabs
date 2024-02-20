@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/phone-number")
 @RequiredArgsConstructor
 public class PhoneNumberCodeController {
-
     private final RestCountriesService restCountriesService;
 
     @GetMapping("/country/{country}")
