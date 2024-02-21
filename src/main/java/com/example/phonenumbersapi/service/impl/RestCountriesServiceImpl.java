@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Objects;
+
 
 @Service
 public class RestCountriesServiceImpl implements RestCountriesService {
@@ -18,9 +18,15 @@ public class RestCountriesServiceImpl implements RestCountriesService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-
         ResponseEntity<RestCountriesApiResponse[]> responseEntity = restTemplate.getForEntity(apiUrl, RestCountriesApiResponse[].class);
-        return Objects.requireNonNull(responseEntity.getBody())[0].getIdd();
+
+        RestCountriesApiResponse[] responseBody = responseEntity.getBody();
+        if (responseBody != null && responseBody.length > 0) {
+            return responseBody[0].getIdd();
+        } else {
+            // Обработка случая, когда ответ от API пустой или null
+            return null; // или бросить исключение, в зависимости от логики вашего приложения
+        }
 
 
     }
