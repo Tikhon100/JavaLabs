@@ -1,4 +1,4 @@
-**CountryNumberCodeApplication**
+<h1>CountryNumberCodeApplication</h1>
 
 **Задание 1 (Лабораторная работа 1):**
 Создайте и запустите локально простейший веб/REST сервис, используя любой открытый пример с использованием Java stack: Spring (Spring Boot)/Maven/Gradle/Jersey/Spring MVC.
