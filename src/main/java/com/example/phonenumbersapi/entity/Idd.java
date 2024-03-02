@@ -7,9 +7,9 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class RestCountriesApiResponse {
-    private Idd idd;
+@AllArgsConstructor
+public class Idd {
+    private String root;
+    private List<String> suffixes;
 }

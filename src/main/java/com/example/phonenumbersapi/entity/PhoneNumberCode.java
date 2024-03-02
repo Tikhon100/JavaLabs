@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Entity
 public class PhoneNumberCode {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
     private String root;
-    private List<String> suffixes;
+
+    @OneToMany(mappedBy = "phoneNumberCode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<NumberSuffix> suffixes;
+
+    @ManyToOne
+    private Country country;
 }

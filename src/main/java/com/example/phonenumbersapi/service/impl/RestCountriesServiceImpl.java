@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.service.impl;
 
+import com.example.phonenumbersapi.entity.Idd;
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.entity.RestCountriesApiResponse;
 import com.example.phonenumbersapi.service.RestCountriesService;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class RestCountriesServiceImpl implements RestCountriesService {
 
     @Override
-    public PhoneNumberCode getPhoneNumberCode(String country) {
+    public Idd getPhoneNumberCode(String country) {
         String apiUrl = "https://restcountries.com/v3.1/currency/{countryCode}?fields=idd";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -29,7 +30,6 @@ public class RestCountriesServiceImpl implements RestCountriesService {
             RestCountriesApiResponse[] responseBody = responseEntity.getBody();
             return responseBody[0].getIdd();
         } else {
-            // Обработка случая, когда ответ от API пустой или null
             return null; // или бросить исключение, в зависимости от логики вашего приложения
         }
     }
