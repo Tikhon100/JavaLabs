@@ -3,6 +3,7 @@ package com.example.phonenumbersapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,13 +13,11 @@ import lombok.*;
 @Entity
 public class NumberSuffix {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "SEQUENCE")
     private Long id;
 
     private Integer number;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    private PhoneNumberCode phoneNumberCode;
     public NumberSuffix(String number) {
         this.number = Integer.parseInt(number);
     }

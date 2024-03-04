@@ -12,16 +12,16 @@ import java.util.Set;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Country {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "SEQUENCE")
     private Long id;
 
     private String name;
@@ -29,7 +29,7 @@ public class Country {
     @OneToOne(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PhoneNumberCode phoneNumberCodes;
 
-    @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Language> languages = new HashSet<>();
 
     public void addLanguage(Language language) {
@@ -40,9 +40,5 @@ public class Country {
     private void removeLanguage(Language language) {
         this.languages.remove(language);
         language.getCountries().remove(this);
-    }
-
-    public Country() {
-        this.languages = new HashSet<>(); // Инициализация коллекции языков в конструкторе
     }
 }
