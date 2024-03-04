@@ -21,7 +21,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public Language getLanguageById(Long id) {
-        return languageRepository.getReferenceById(id);
+        return languageRepository.findById(id).orElse(null);
     }
 
     @Override

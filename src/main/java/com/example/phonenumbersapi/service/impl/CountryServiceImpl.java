@@ -24,7 +24,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getCountyById(Long id) {
-        return countryRepository.getReferenceById(id);
+        return countryRepository.findById(id).orElse(null);
     }
 
     @Override

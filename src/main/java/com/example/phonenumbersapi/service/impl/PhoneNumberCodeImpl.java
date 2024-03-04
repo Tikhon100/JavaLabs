@@ -29,7 +29,8 @@ public class PhoneNumberCodeImpl implements PhoneNumberCodeService {
 
     @Override
     public PhoneNumberCode getPhoneNumberCodeById(Long id) {
-        return phoneNumberCodeRepository.getReferenceById(id);
+
+        return phoneNumberCodeRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -48,22 +49,4 @@ public class PhoneNumberCodeImpl implements PhoneNumberCodeService {
         phoneNumberCodeRepository.deleteById(id);
     }
 
-//    @Override
-//    public void createPhoneNumberCodeFromApi(String countryName) {
-//        Idd idd = restCountriesService.getPhoneNumberCode(countryName);
-//
-//        Country country = Country.builder().name(countryName).build();
-//        PhoneNumberCode phoneNumberCode = PhoneNumberCode.builder().root(idd.getRoot()).build();
-//        List<NumberSuffix> numberSuffixes = idd.getSuffixes().stream()
-//                .map(NumberSuffix::new)
-//                .toList();
-//
-//
-////        country.setNumberSuffixes(numberSuffixes);
-////        countryService.saveCountry(country);
-//
-//        phoneNumberCode.setSuffixes(numberSuffixes);
-//        phoneNumberCode.setCountry(country);
-//        phoneNumberCodeRepository.save(phoneNumberCode);
-//    }
 }

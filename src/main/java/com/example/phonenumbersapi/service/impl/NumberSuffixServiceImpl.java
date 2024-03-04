@@ -21,7 +21,7 @@ public class NumberSuffixServiceImpl implements NumberSuffixService {
 
     @Override
     public NumberSuffix getNumberSuffixById(Long id) {
-        return numberSuffixRepository.getReferenceById(id);
+        return numberSuffixRepository.findById(id).orElse(null);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.example.phonenumbersapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -18,7 +18,6 @@ public class NumberSuffix {
 
     private Integer number;
 
-    public NumberSuffix(String number) {
-        this.number = Integer.parseInt(number);
-    }
+    @ManyToOne
+    private PhoneNumberCode phoneNumberCode;
 }
