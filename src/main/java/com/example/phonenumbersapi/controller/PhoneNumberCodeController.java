@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/phone-number-code")
+@RequestMapping("/api/v1/phone-number-codes")
 @RequiredArgsConstructor
 public class PhoneNumberCodeController {
 

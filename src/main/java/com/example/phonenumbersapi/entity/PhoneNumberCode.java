@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 public class PhoneNumberCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String root;
@@ -22,6 +23,7 @@ public class PhoneNumberCode {
     @OneToMany(mappedBy = "phoneNumberCode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<NumberSuffix> suffixes;
 
-    @ManyToOne
+    @OneToOne
+    @JsonIgnore
     private Country country;
 }

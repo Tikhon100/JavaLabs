@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/country")
+@RequestMapping("/api/v1/countries")
 @RequiredArgsConstructor
 public class CountryController {
 
@@ -21,13 +21,13 @@ public class CountryController {
     @GetMapping("/all")
     public ResponseEntity<List<Country>> getAllCountries() {
         List<Country> countries = countryService.getAllCountries();
-        return ResponseEntity.ok(countries);
+        return new ResponseEntity<>(countries, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Country> getCountryById(@PathVariable("id") Long id) {
         Country country = countryService.getCountyById(id);
-        return ResponseEntity.ok(country);
+        return new ResponseEntity<>(country, HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -46,6 +46,6 @@ public class CountryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCountry(@PathVariable("id") Long id) {
         countryService.deleteCountry(id);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.noContent().build();
     }
 }

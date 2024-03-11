@@ -7,13 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/phone-number")
+@RequestMapping("/api/v1/phone-numbers")
 @RequiredArgsConstructor
 public class PhoneNumberCodeOldController {
     private final RestCountriesService restCountriesService;
 
-    @GetMapping("/country/{country}")
+    @GetMapping("/get/{country}")
     public ResponseEntity<Idd> getPhoneNumberCodeByCountry(@PathVariable("country") String country) {
+        Idd idd = restCountriesService.getPhoneNumberCode(country);
+        return ResponseEntity.ok(idd);
+    }
+
+    @GetMapping("/save/{country}")
+    public ResponseEntity<Idd> savePhoneNumberCodeByCountry(@PathVariable("country") String country) {
         Idd idd = restCountriesService.getPhoneNumberCode(country);
         return ResponseEntity.ok(idd);
     }

@@ -3,7 +3,6 @@ package com.example.phonenumbersapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -13,22 +12,13 @@ import java.util.List;
 @Entity
 public class NumberSuffix {
     @Id
-    @GeneratedValue(generator = "SEQUENCE")
+    @GeneratedValue
     private Long id;
 
     private Integer number;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     private PhoneNumberCode phoneNumberCode;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "number_suffix_country",
-            joinColumns = @JoinColumn(name = "number_suffix_id"),
-            inverseJoinColumns = @JoinColumn(name = "country_id")
-    )
-    private List<Country> countries;
-
     public NumberSuffix(String number) {
         this.number = Integer.parseInt(number);
     }
