@@ -1,19 +1,15 @@
 package com.example.phonenumbersapi.service.impl;
 
-import com.example.phonenumbersapi.entity.Country;
-import com.example.phonenumbersapi.entity.NumberSuffix;
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
-import com.example.phonenumbersapi.service.CountryService;
-import com.example.phonenumbersapi.service.NumberSuffixService;
+
 import com.example.phonenumbersapi.service.PhoneNumberCodeService;
-import com.example.phonenumbersapi.service.RestCountriesService;
-import com.example.phonenumbersapi.entity.Idd;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 
 @Service
