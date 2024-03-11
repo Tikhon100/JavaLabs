@@ -1,12 +1,12 @@
 package com.example.phonenumbersapi.controller;
 
 import com.example.phonenumbersapi.entity.Country;
-import com.example.phonenumbersapi.entity.PhoneNumberCode;
+
 import com.example.phonenumbersapi.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

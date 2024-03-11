@@ -1,8 +1,8 @@
 package com.example.phonenumbersapi.controller;
 
-import com.example.phonenumbersapi.entity.Country;
+
 import com.example.phonenumbersapi.entity.NumberSuffix;
-import com.example.phonenumbersapi.service.CountryService;
+
 import com.example.phonenumbersapi.service.NumberSuffixService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
