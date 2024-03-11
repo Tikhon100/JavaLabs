@@ -18,9 +18,4 @@ public class PhoneNumberCodeOldController {
         return ResponseEntity.ok(idd);
     }
 
-    @GetMapping("/save/{country}")
-    public ResponseEntity<Idd> savePhoneNumberCodeByCountry(@PathVariable("country") String country) {
-        Idd idd = restCountriesService.getPhoneNumberCode(country);
-        return ResponseEntity.ok(idd);
-    }
 }

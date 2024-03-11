@@ -4,7 +4,6 @@ import com.example.phonenumbersapi.entity.Country;
 
 import com.example.phonenumbersapi.entity.Language;
 import com.example.phonenumbersapi.repository.CountryRepository;
-import com.example.phonenumbersapi.repository.LanguageRepository;
 import com.example.phonenumbersapi.service.CountryService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
 
-    private final LanguageRepository languageRepository;
     @Override
     public List<Country> getAllCountries() {
         return countryRepository.findAll();
@@ -48,7 +46,6 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public void deleteCountry(Long id) {
         Country country = this.getCountyById(id);
-        System.out.println(country.getName());
         for (Language language : new ArrayList<>(country.getLanguages())){
             language.removeCountry(country);
         }
