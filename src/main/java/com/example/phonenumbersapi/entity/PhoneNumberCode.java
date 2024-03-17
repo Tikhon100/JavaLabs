@@ -15,6 +15,7 @@ public class PhoneNumberCode {
     @Column
     private String code;
 
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"phoneNumberCodes", "languages"})
 

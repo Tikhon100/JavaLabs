@@ -18,6 +18,7 @@ public class PhoneNumberCodeService {
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private CountryRepository countryRepository;
 
+
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
         return phoneNumberCodeRepository.findAll();
     }

@@ -19,9 +19,10 @@ public class CountryController {
     }
 
     @GetMapping("/getCountiesByLanguages")
-    public List<Country> getCountiesByLanguages(@RequestParam List<String> languages){
+    public List<Country> getCountiesByLanguages(@RequestParam List<String> languages) {
         return countryService.getCountriesByLanguages(languages);
     }
+
 
     @GetMapping("/{id}")
     public Country getCountryById(@PathVariable Long id) {
@@ -45,11 +46,11 @@ public class CountryController {
 
     @PatchMapping("/addLanguageToCountry/{id}")
     public String addLanguageToCountry(@PathVariable Long id, @RequestParam Long languageId) {
-        return countryService.addLanguageToCountry(id,languageId);
+        return countryService.addLanguageToCountry(id, languageId);
     }
 
     @PatchMapping("/deleteLanguageFromCountry/{id}")
-    public String deleteLanguageFromCountry(@PathVariable Long id, @RequestParam Long languageId){
+    public String deleteLanguageFromCountry(@PathVariable Long id, @RequestParam Long languageId) {
         return countryService.deleteLanguageFromCountry(id, languageId);
     }
 

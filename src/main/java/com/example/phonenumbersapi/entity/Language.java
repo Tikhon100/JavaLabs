@@ -14,6 +14,7 @@ public class Language {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String name;
 
     @ManyToMany(mappedBy = "languages", cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})

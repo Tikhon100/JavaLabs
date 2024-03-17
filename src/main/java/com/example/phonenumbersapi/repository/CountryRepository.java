@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+
 public interface CountryRepository extends JpaRepository<Country, Long> {
     @Query("SELECT DISTINCT c FROM Country c JOIN c.languages l WHERE l.name IN :languages")
     List<Country> getCountriesByLanguages(List<String> languages);

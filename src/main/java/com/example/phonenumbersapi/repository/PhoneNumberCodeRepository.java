@@ -5,3 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PhoneNumberCodeRepository extends JpaRepository<PhoneNumberCode, Long> {
 }
+
