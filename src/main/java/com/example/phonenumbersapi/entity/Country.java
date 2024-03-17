@@ -1,41 +1,35 @@
 package com.example.phonenumbersapi.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+import java.util.List;
 
-import java.util.HashSet;
-
-import java.util.Set;
-
-
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+@Table (name = "countries")
 public class Country {
     @Id
-    @GeneratedValue(generator = "SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(name = "name")
+    String name;
 
-    @OneToOne(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private PhoneNumberCode phoneNumberCodes;
+    @Column
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("country")
+    private List<PhoneNumberCode> phoneNumberCodes;
 
-    @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Language> languages = new HashSet<>();
-
-    public void addLanguage(Language language) {
-        this.languages.add(language);
-        language.getCountries().add(this);
-    }
-
-
+    @Column
+    @ManyToMany(cascade = {CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("countries")
+    @JoinTable(
+            name = "country_language",
+            joinColumns = @JoinColumn(name = "country_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id")
+    )
+    private List<Language> languages;
 }

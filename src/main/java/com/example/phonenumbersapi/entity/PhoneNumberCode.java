@@ -1,27 +1,23 @@
 package com.example.phonenumbersapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
-import java.util.List;
-
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Entity
+@Table(name = "phone_number_codes")
 public class PhoneNumberCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String root;
+    @Column
+    private String code;
 
-    @OneToMany(mappedBy = "phoneNumberCode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<NumberSuffix> suffixes;
+    @ManyToOne
+    @JsonIgnoreProperties(value = {"phoneNumberCodes", "languages"})
 
-    @OneToOne
+    @JoinColumn(name = "country_id")
     private Country country;
 }

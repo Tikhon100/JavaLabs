@@ -1,51 +1,61 @@
 package com.example.phonenumbersapi.controller;
 
 import com.example.phonenumbersapi.entity.Country;
-
 import com.example.phonenumbersapi.service.CountryService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/countries")
-@RequiredArgsConstructor
+@RequestMapping("api/v1/country")
 public class CountryController {
-
     private final CountryService countryService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Country>> getAllCountries() {
-        List<Country> countries = countryService.getAllCountries();
-        return new ResponseEntity<>(countries, HttpStatus.OK);
+    public List<Country> getAllCountries() {
+        return countryService.getAllCountries();
+    }
+
+    @GetMapping("/getCountiesByLanguages")
+    public List<Country> getCountiesByLanguages(@RequestParam List<String> languages){
+        return countryService.getCountriesByLanguages(languages);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> getCountryById(@PathVariable("id") Long id) {
-        Country country = countryService.getCountyById(id);
-        return new ResponseEntity<>(country, HttpStatus.OK);
+    public Country getCountryById(@PathVariable Long id) {
+        return countryService.getCountryById(id);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Void> createCountry(@RequestBody Country country) {
-        countryService.saveCountry(country);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/create")
+    public String createCountry(@RequestBody Country country) {
+        return countryService.createCountry(country);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateCountry(@PathVariable("id") Long id,
-                                              @RequestBody Country country) {
-        countryService.updateCountry(id, country);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PatchMapping("/updateName/{id}")
+    public String updateNameCountry(@PathVariable Long id, @RequestParam String name) {
+        return countryService.updateNameCountry(id, name);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCountry(@PathVariable("id") Long id) {
+    @PatchMapping("addPhoneNumberCode/{id}")
+    public String addPhoneNumberCode(@PathVariable Long id, @RequestParam String code) {
+        return countryService.addPhoneNumberCode(id, code);
+    }
+
+    @PatchMapping("/addLanguageToCountry/{id}")
+    public String addLanguageToCountry(@PathVariable Long id, @RequestParam Long languageId) {
+        return countryService.addLanguageToCountry(id,languageId);
+    }
+
+    @PatchMapping("/deleteLanguageFromCountry/{id}")
+    public String deleteLanguageFromCountry(@PathVariable Long id, @RequestParam Long languageId){
+        return countryService.deleteLanguageFromCountry(id, languageId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteCountry(@PathVariable Long id) {
         countryService.deleteCountry(id);
-        return ResponseEntity.noContent().build();
+        return "Successfully deleted";
     }
 }

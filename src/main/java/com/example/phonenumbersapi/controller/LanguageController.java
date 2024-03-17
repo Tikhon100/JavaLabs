@@ -1,51 +1,53 @@
 package com.example.phonenumbersapi.controller;
 
-
+import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
-
 import com.example.phonenumbersapi.service.LanguageService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/languages")
-@RequiredArgsConstructor
+@RequestMapping("api/v1/language")
 public class LanguageController {
 
     private final LanguageService languageService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Language>> getAllCountries() {
-        List<Language> languages = languageService.getAllLanguages();
-        return ResponseEntity.ok(languages);
+    public List<Language> getAllCountries() {
+        return languageService.getAllLanguages();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Language> getLanguageById(@PathVariable("id") Long id) {
-        Language language = languageService.getLanguageById(id);
-        return ResponseEntity.ok(language);
+    public Language getLanguageById(@PathVariable Long id) {
+        return languageService.getLanguageById(id);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Void> createLanguage(@RequestBody Language language) {
-        languageService.saveLanguage(language);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/create/")
+    public String createLanguage(@RequestParam String name, @RequestParam(required = false) List<Long> countryIds) {
+        return languageService.createLanguage(name, countryIds);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateLanguage(@PathVariable("id") Long id,
-                                               @RequestBody Language language) {
-        languageService.updateLanguage(id, language);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PatchMapping("/changeName/{id}")
+    public String updateLanguageName(@PathVariable Long id, @RequestParam String name) {
+        return languageService.updateLanguageName(id, name);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLanguage(@PathVariable("id") Long id) {
-        languageService.deleteLanguage(id);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PatchMapping("/addCountry/{id}")
+    public String addCountryToLanguage(@PathVariable Long id, @RequestParam Long countryId) {
+        return languageService.addCountryToLanguage(id, countryId);
+    }
+
+    @PatchMapping("deleteCountry/{id}")
+    public String deleteCountryFromLanguage(@PathVariable Long id, @RequestParam Long countryId) {
+        return languageService.deleteCountryFromLanguage(id, countryId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteLanguageById(@PathVariable Long id) {
+        return languageService.deleteLanguageById(id);
     }
 }
