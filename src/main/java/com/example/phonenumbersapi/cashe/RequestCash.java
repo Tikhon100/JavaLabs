@@ -20,7 +20,8 @@ public class RequestCash {
     public static void remove(String key) {
         cache.remove(key);
     }
-    public static boolean containsKey(String key){
+
+    public static boolean containsKey(String key) {
         return cache.containsKey(key);
     }
 
@@ -29,7 +30,7 @@ public class RequestCash {
     }
 
     private RequestCash() {
-        throw new IllegalStateException("Utility class");
+        
     }
 }
 

@@ -23,15 +23,15 @@ public class LanguageService {
     private CountryRepository countryRepository;
 
     private static final Logger LOGGER = Logger.getLogger(LanguageService.class.getName());
-    public List<Language> getAllLanguages() {
-        if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)){
-            LOGGER.info("Getting all languages from cache");
-            return (List<Language>)RequestCash.get(ALL_LANGUAGES_REQUEST);
-        }
-        else {
 
-            List <Language> languageList = languageRepository.findAll();
-            RequestCash.put(ALL_LANGUAGES_REQUEST,languageList);
+    public List<Language> getAllLanguages() {
+        if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
+            LOGGER.info("Getting all languages from cache");
+            return (List<Language>) RequestCash.get(ALL_LANGUAGES_REQUEST);
+        } else {
+
+            List<Language> languageList = languageRepository.findAll();
+            RequestCash.put(ALL_LANGUAGES_REQUEST, languageList);
             LOGGER.info("Getting all languages form DB");
             return languageList;
         }
@@ -39,22 +39,21 @@ public class LanguageService {
 
     public Language getLanguageById(Long id) {
 
-        if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST +id)){
+        if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
             LOGGER.info("Getting language by id from cache");
-            return ((List<Language>) RequestCash.get(LANGUAGE_BY_ID_REQUEST +id)).get(0);
-        }
-        else {
+            return ((List<Language>) RequestCash.get(LANGUAGE_BY_ID_REQUEST + id)).get(0);
+        } else {
             LOGGER.info("Getting language by id from DB");
             Language language = languageRepository.findById(id).orElse(null);
             List<Language> languageList = new ArrayList<>();
             languageList.add(language);
-            RequestCash.put(LANGUAGE_BY_ID_REQUEST +id, languageList);
+            RequestCash.put(LANGUAGE_BY_ID_REQUEST + id, languageList);
             return language;
         }
     }
 
     public String updateLanguageName(Long id, String name) {
-        if (languageRepository.findByName(name)!=null) {
+        if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
         }
 
@@ -65,11 +64,11 @@ public class LanguageService {
             language.setName(name);
             languageRepository.save(language);
 
-            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)){
+            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
                 RequestCash.remove(ALL_LANGUAGES_REQUEST);
             }
-            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST +id)){
-                RequestCash.remove(LANGUAGE_BY_ID_REQUEST +id);
+            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
+                RequestCash.remove(LANGUAGE_BY_ID_REQUEST + id);
             }
             LOGGER.info("Part of data deleted from cache");
             return "Successful updated!";
@@ -109,7 +108,7 @@ public class LanguageService {
     }
 
     public String createLanguage(String name, List<Long> countryIds) {
-        if (languageRepository.findByName(name)!=null) {
+        if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
         }
 
@@ -143,11 +142,11 @@ public class LanguageService {
             }
             languageRepository.delete(language);
 
-            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)){
+            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
                 RequestCash.remove(ALL_LANGUAGES_REQUEST);
             }
-            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST +id)){
-                RequestCash.remove(LANGUAGE_BY_ID_REQUEST +id);
+            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
+                RequestCash.remove(LANGUAGE_BY_ID_REQUEST + id);
             }
             LOGGER.info("All languages response and language by id response deleted if there are in cache");
             return "Successful deleted!";

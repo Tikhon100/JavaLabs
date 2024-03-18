@@ -25,27 +25,27 @@ public class PhoneNumberCodeService {
     private CountryRepository countryRepository;
 
     private static final Logger LOGGER = Logger.getLogger(PhoneNumberCodeService.class.getName());
+
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
-        if (RequestCash.containsKey(ALL_PHONE_NUMBER_CODES_REQUEST)){
+        if (RequestCash.containsKey(ALL_PHONE_NUMBER_CODES_REQUEST)) {
             LOGGER.info("Getting all phone number code from cache");
-            return (List<PhoneNumberCode>)RequestCash.get(ALL_PHONE_NUMBER_CODES_REQUEST);
+            return (List<PhoneNumberCode>) RequestCash.get(ALL_PHONE_NUMBER_CODES_REQUEST);
         }
         LOGGER.info("Getting data from DB");
         List<PhoneNumberCode> phoneNumberCodes = phoneNumberCodeRepository.findAll();
-        RequestCash.put(ALL_PHONE_NUMBER_CODES_REQUEST,phoneNumberCodes);
+        RequestCash.put(ALL_PHONE_NUMBER_CODES_REQUEST, phoneNumberCodes);
         return phoneNumberCodes;
     }
 
     public PhoneNumberCode getPhoneNumberCodeById(Long id) {
-        if (RequestCash.containsKey(PHONE_NUMBER_CODE_BY_ID_REQUEST +id)){
+        if (RequestCash.containsKey(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)) {
             LOGGER.info("Getting phone number code by id from cache");
-            return ((List<PhoneNumberCode>)RequestCash.get(PHONE_NUMBER_CODE_BY_ID_REQUEST +id)).get(0);
-        }
-        else {
+            return ((List<PhoneNumberCode>) RequestCash.get(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)).get(0);
+        } else {
             PhoneNumberCode phoneNumberCode = phoneNumberCodeRepository.findById(id).orElse(null);
             List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
             phoneNumberCodeList.add(phoneNumberCode);
-            RequestCash.put(PHONE_NUMBER_CODE_BY_ID_REQUEST +id,phoneNumberCodeList);
+            RequestCash.put(PHONE_NUMBER_CODE_BY_ID_REQUEST + id, phoneNumberCodeList);
             LOGGER.info("Getting phone number code by id from DB");
             return phoneNumberCode;
         }

@@ -27,13 +27,12 @@ public class CountryService {
 
 
     public List<Country> getAllCountries() {
-        if (RequestCash.containsKey(ALL_COUNTRIES_REQUEST)){
+        if (RequestCash.containsKey(ALL_COUNTRIES_REQUEST)) {
             LOGGER.info("Getting all countries from cache");
-            return  (List<Country>) RequestCash.get(ALL_COUNTRIES_REQUEST);
-        }
-        else {
-            List<Country> countryList =  countryRepository.findAll();
-            RequestCash.put(ALL_COUNTRIES_REQUEST,countryList);
+            return (List<Country>) RequestCash.get(ALL_COUNTRIES_REQUEST);
+        } else {
+            List<Country> countryList = countryRepository.findAll();
+            RequestCash.put(ALL_COUNTRIES_REQUEST, countryList);
             LOGGER.info("Getting all countries from DB");
             return countryList;
         }
@@ -41,21 +40,20 @@ public class CountryService {
     }
 
     public Country getCountryById(Long id) {
-        if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST +id.toString())){
+        if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
             LOGGER.info("Getting country by id from cache");
-            return ((List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST +id)).get(0);
-        }
-        else {
+            return ((List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
+        } else {
             LOGGER.info("Getting country by id from DB");
             Country country = countryRepository.findById(id).orElse(null);
             List<Country> countryList = new ArrayList<>();
             countryList.add(country);
-            RequestCash.put(COUNTRY_BY_ID_REQUEST +id, countryList);
+            RequestCash.put(COUNTRY_BY_ID_REQUEST + id, countryList);
             return country;
         }
     }
 
-    public List<Country> getCountriesByLanguages(List<String> languages){
+    public List<Country> getCountriesByLanguages(List<String> languages) {
 
         return countryRepository.getCountriesByLanguages(languages);
     }
@@ -109,10 +107,10 @@ public class CountryService {
 
             RequestCash.remove(ALL_COUNTRIES_REQUEST);
             LOGGER.info("all country request was deleted from cache");
-            if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST +id)){
-                List <Country> updatedCountry = (List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST +id);
+            if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST + id)) {
+                List<Country> updatedCountry = (List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST + id);
                 updatedCountry.get(0).setName(name);
-                RequestCash.put(COUNTRY_BY_ID_REQUEST +id, updatedCountry);
+                RequestCash.put(COUNTRY_BY_ID_REQUEST + id, updatedCountry);
                 LOGGER.info("Element in cache was updated");
             }
             return "Successful updated!";
@@ -182,7 +180,7 @@ public class CountryService {
         countryRepository.delete(country);
 
         RequestCash.remove(ALL_COUNTRIES_REQUEST);
-        RequestCash.remove(COUNTRY_BY_ID_REQUEST +countryId);
+        RequestCash.remove(COUNTRY_BY_ID_REQUEST + countryId);
         LOGGER.info("Part of country cache cleared");
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
