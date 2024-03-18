@@ -18,34 +18,34 @@ import java.util.logging.Logger;
 @Service
 @AllArgsConstructor
 public class PhoneNumberCodeService {
-    private static final String allPhoneNumberCodesRequest = "http://localhost:8080/api/v1/phoneNumberCode/all";
-    private static final String phoneNumberCodeByIdRequest = "http://localhost:8080/api/v1/language/";
+    private static final String ALL_PHONE_NUMBER_CODES_REQUEST = "http://localhost:8080/api/v1/phoneNumberCode/all";
+    private static final String PHONE_NUMBER_CODE_BY_ID_REQUEST = "http://localhost:8080/api/v1/language/";
 
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private CountryRepository countryRepository;
 
     private static final Logger LOGGER = Logger.getLogger(PhoneNumberCodeService.class.getName());
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
-        if (RequestCash.containsKey(allPhoneNumberCodesRequest)){
+        if (RequestCash.containsKey(ALL_PHONE_NUMBER_CODES_REQUEST)){
             LOGGER.info("Getting all phone number code from cache");
-            return (List<PhoneNumberCode>)RequestCash.get(allPhoneNumberCodesRequest);
+            return (List<PhoneNumberCode>)RequestCash.get(ALL_PHONE_NUMBER_CODES_REQUEST);
         }
         LOGGER.info("Getting data from DB");
         List<PhoneNumberCode> phoneNumberCodes = phoneNumberCodeRepository.findAll();
-        RequestCash.put(allPhoneNumberCodesRequest,phoneNumberCodes);
+        RequestCash.put(ALL_PHONE_NUMBER_CODES_REQUEST,phoneNumberCodes);
         return phoneNumberCodes;
     }
 
     public PhoneNumberCode getPhoneNumberCodeById(Long id) {
-        if (RequestCash.containsKey(phoneNumberCodeByIdRequest+id)){
+        if (RequestCash.containsKey(PHONE_NUMBER_CODE_BY_ID_REQUEST +id)){
             LOGGER.info("Getting phone number code by id from cache");
-            return ((List<PhoneNumberCode>)RequestCash.get(phoneNumberCodeByIdRequest+id)).get(0);
+            return ((List<PhoneNumberCode>)RequestCash.get(PHONE_NUMBER_CODE_BY_ID_REQUEST +id)).get(0);
         }
         else {
             PhoneNumberCode phoneNumberCode = phoneNumberCodeRepository.findById(id).orElse(null);
             List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
             phoneNumberCodeList.add(phoneNumberCode);
-            RequestCash.put(phoneNumberCodeByIdRequest+id,phoneNumberCodeList);
+            RequestCash.put(PHONE_NUMBER_CODE_BY_ID_REQUEST +id,phoneNumberCodeList);
             LOGGER.info("Getting phone number code by id from DB");
             return phoneNumberCode;
         }
