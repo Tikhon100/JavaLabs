@@ -23,7 +23,6 @@ public class CountryController {
         return countryService.getCountriesByLanguages(languages);
     }
 
-
     @GetMapping("/{id}")
     public Country getCountryById(@PathVariable Long id) {
         return countryService.getCountryById(id);

@@ -1,26 +1,32 @@
 package com.example.phonenumbersapi.cashe;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Component
 public class RequestCash {
-    private static final Map<String, Object> cacheMap = new HashMap<>();
+    private static Map<String, Object> cache = new HashMap<>();
 
-    public Object get(String key) {
-        return cacheMap.get(key);
+    public static void put(String key, Object value) {
+        cache.put(key, value);
     }
 
-    public void put(String key,Object value) {
-        cacheMap.put(key, value);
+    public static Object get(String key) {
+        return cache.get(key);
     }
 
-    public void remove(String key) {
-        cacheMap.remove(key);
+    public static void remove(String key) {
+        cache.remove(key);
+    }
+    public static boolean containsKey(String key){
+        return cache.containsKey(key);
     }
 
-    public void clear() {
-        cacheMap.clear();
+    public static void clear() {
+        cache.clear();
     }
-
 }
+
+

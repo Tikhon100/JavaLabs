@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.service;
 
+import com.example.phonenumbersapi.cashe.RequestCash;
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
@@ -12,24 +13,50 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class CountryService {
-
+    private static final String allCountriesRequest = "http://localhost:8080/api/v1/country/all";
+    private static final String countryByIdRequest = "http://localhost:8080/api/v1/country/";
+    private static final Logger LOGGER = Logger.getLogger(CountryService.class.getName());
     private CountryRepository countryRepository;
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private LanguageRepository languageRepository;
 
+
     public List<Country> getAllCountries() {
-        return countryRepository.findAll();
+        if (RequestCash.containsKey(allCountriesRequest)){
+            LOGGER.info("Getting all countries from cache");
+            return  (List<Country>) RequestCash.get(allCountriesRequest);
+        }
+        else {
+            List<Country> countryList =  countryRepository.findAll();
+            RequestCash.put(allCountriesRequest,countryList);
+            LOGGER.info("Getting all countries from DB");
+            return countryList;
+        }
+
     }
 
     public Country getCountryById(Long id) {
-        return countryRepository.findById(id).orElse(null);
+        if (RequestCash.containsKey(countryByIdRequest+id.toString())){
+            LOGGER.info("Getting country by id from cache");
+            return ((List<Country>) RequestCash.get(countryByIdRequest+id)).get(0);
+        }
+        else {
+            LOGGER.info("Getting country by id from DB");
+            Country country = countryRepository.findById(id).orElse(null);
+            List<Country> countryList = new ArrayList<>();
+            countryList.add(country);
+            RequestCash.put(countryByIdRequest+id, countryList);
+            return country;
+        }
     }
 
     public List<Country> getCountriesByLanguages(List<String> languages){
+
         return countryRepository.getCountriesByLanguages(languages);
     }
 
@@ -41,7 +68,6 @@ public class CountryService {
                 return "Bad request, do not share the same languages in the same country";
             }
         }
-
 
 
         for (PhoneNumberCode phoneNumberCode : country.getPhoneNumberCodes()) {
@@ -70,6 +96,8 @@ public class CountryService {
         // Сохраняем страну в базу данных
         countryRepository.save(country);
 
+        RequestCash.clear();
+        LOGGER.info("country cache cleared");
         return "Successfully saved!";
     }
 
@@ -78,6 +106,15 @@ public class CountryService {
         if (country != null) {
             country.setName(name);
             countryRepository.save(country);
+
+            RequestCash.remove(allCountriesRequest);
+            LOGGER.info("all country request was deleted from cache");
+            if (RequestCash.containsKey(countryByIdRequest+id)){
+                List <Country> updatedCountry = (List<Country>) RequestCash.get(countryByIdRequest+id);
+                updatedCountry.get(0).setName(name);
+                RequestCash.put(countryByIdRequest+id, updatedCountry);
+                LOGGER.info("Element in cache was updated");
+            }
             return "Successful!";
         } else return "Error id";
     }
@@ -90,6 +127,9 @@ public class CountryService {
             country.getLanguages().add(language);
             languageRepository.save(language);
             countryRepository.save(country);
+
+            RequestCash.clear();
+            LOGGER.info("country cache cleared");
             return "Successful!";
         } else return "Error id or this language already exist in country";
     }
@@ -102,6 +142,9 @@ public class CountryService {
             country.getLanguages().remove(language);
             languageRepository.save(language);
             countryRepository.save(country);
+
+            RequestCash.clear();
+            LOGGER.info("country cache cleared");
             return "Successful!";
         }
         return "Wrong id or these country do not contains this language";
@@ -117,6 +160,9 @@ public class CountryService {
 
             phoneNumberCodeRepository.save(phoneNumberCode);
             countryRepository.save(country);
+
+            RequestCash.clear();
+            LOGGER.info("country cache cleared");
             return "Successful!";
         }
         return "Error in id";
@@ -135,7 +181,11 @@ public class CountryService {
 
         countryRepository.delete(country);
 
+        RequestCash.remove(allCountriesRequest);
+        RequestCash.remove(countryByIdRequest+countryId);
+        LOGGER.info("Part of country cache cleared");
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
+
 
 }

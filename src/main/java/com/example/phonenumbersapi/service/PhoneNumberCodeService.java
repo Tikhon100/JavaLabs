@@ -1,30 +1,54 @@
 package com.example.phonenumbersapi.service;
 
+import com.example.phonenumbersapi.cashe.RequestCash;
 import com.example.phonenumbersapi.entity.Country;
+
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class PhoneNumberCodeService {
+    private static final String allPhoneNumberCodesRequest = "http://localhost:8080/api/v1/phoneNumberCode/all";
+    private static final String phoneNumberCodeByIdRequest = "http://localhost:8080/api/v1/language/";
+
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private CountryRepository countryRepository;
 
-
+    private static final Logger LOGGER = Logger.getLogger(PhoneNumberCodeService.class.getName());
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
-        return phoneNumberCodeRepository.findAll();
+        if (RequestCash.containsKey(allPhoneNumberCodesRequest)){
+            LOGGER.info("Getting all phone number code from cache");
+            return (List<PhoneNumberCode>)RequestCash.get(allPhoneNumberCodesRequest);
+        }
+        LOGGER.info("Getting data from DB");
+        List<PhoneNumberCode> phoneNumberCodes = phoneNumberCodeRepository.findAll();
+        RequestCash.put(allPhoneNumberCodesRequest,phoneNumberCodes);
+        return phoneNumberCodes;
     }
 
     public PhoneNumberCode getPhoneNumberCodeById(Long id) {
-        return phoneNumberCodeRepository.findById(id).orElse(null);
+        if (RequestCash.containsKey(phoneNumberCodeByIdRequest+id)){
+            LOGGER.info("Getting phone number code by id from cache");
+            return ((List<PhoneNumberCode>)RequestCash.get(phoneNumberCodeByIdRequest+id)).get(0);
+        }
+        else {
+            PhoneNumberCode phoneNumberCode = phoneNumberCodeRepository.findById(id).orElse(null);
+            List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
+            phoneNumberCodeList.add(phoneNumberCode);
+            RequestCash.put(phoneNumberCodeByIdRequest+id,phoneNumberCodeList);
+            LOGGER.info("Getting phone number code by id from DB");
+            return phoneNumberCode;
+        }
     }
 
     public String createPhoneNumberCode(Long countryId, String code) {
@@ -40,6 +64,9 @@ public class PhoneNumberCodeService {
 
             phoneNumberCodeRepository.save(phoneNumberCode);
             countryRepository.save(country);
+
+            RequestCash.clear();
+            LOGGER.info("Cache cleared in function createPhoneNumberCode");
             return "Successful!";
         }
     }
@@ -53,6 +80,8 @@ public class PhoneNumberCodeService {
                 phoneNumberCode.setCode(code);
                 phoneNumberCodeRepository.save(phoneNumberCode);
             }
+            RequestCash.clear();
+            LOGGER.info("Cache cleared in function updatePhoneNumberCode");
             return "Successful!";
         }
     }
@@ -61,6 +90,8 @@ public class PhoneNumberCodeService {
         Optional<PhoneNumberCode> optionalPhoneNumberCode = phoneNumberCodeRepository.findById(id);
         if (optionalPhoneNumberCode.isPresent()) {
             phoneNumberCodeRepository.deleteById(id);
+            RequestCash.clear();
+            LOGGER.info("Cache cleared in function deletePhoneNumberCode");
             return "Successful";
         } else {
             return "Object with id " + id + " not found";

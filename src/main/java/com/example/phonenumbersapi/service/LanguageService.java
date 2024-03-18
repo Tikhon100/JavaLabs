@@ -1,7 +1,9 @@
 package com.example.phonenumbersapi.service;
 
+import com.example.phonenumbersapi.cashe.RequestCash;
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
+import com.example.phonenumbersapi.service.CountryService;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.LanguageRepository;
 import lombok.AllArgsConstructor;
@@ -9,20 +11,47 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class LanguageService {
 
+    private static final String allLanguagesRequest = "http://localhost:8080/api/v1/language/all";
+    private static final String languageByIdRequest = "http://localhost:8080/api/v1/language/";
+
     private LanguageRepository languageRepository;
     private CountryRepository countryRepository;
 
+    private static final Logger LOGGER = Logger.getLogger(LanguageService.class.getName());
     public List<Language> getAllLanguages() {
-        return languageRepository.findAll();
+        if (RequestCash.containsKey(allLanguagesRequest)){
+            LOGGER.info("Getting all languages from cache");
+            return (List<Language>)RequestCash.get(allLanguagesRequest);
+        }
+        else {
+
+            List <Language> languageList = languageRepository.findAll();
+            RequestCash.put(allLanguagesRequest,languageList);
+            LOGGER.info("Getting all languages form DB");
+            return languageList;
+        }
     }
 
     public Language getLanguageById(Long id) {
-        return languageRepository.findById(id).orElse(null);
+
+        if (RequestCash.containsKey(languageByIdRequest+id)){
+            LOGGER.info("Getting language by id from cache");
+            return ((List<Language>) RequestCash.get(languageByIdRequest+id)).get(0);
+        }
+        else {
+            LOGGER.info("Getting language by id from DB");
+            Language language = languageRepository.findById(id).orElse(null);
+            List<Language> languageList = new ArrayList<>();
+            languageList.add(language);
+            RequestCash.put(languageByIdRequest+id, languageList);
+            return language;
+        }
     }
 
     public String updateLanguageName(Long id, String name) {
@@ -36,6 +65,14 @@ public class LanguageService {
         } else {
             language.setName(name);
             languageRepository.save(language);
+
+            if (RequestCash.containsKey(allLanguagesRequest)){
+                RequestCash.remove(allLanguagesRequest);
+            }
+            if (RequestCash.containsKey(languageByIdRequest+id)){
+                RequestCash.remove(languageByIdRequest+id);
+            }
+            LOGGER.info("Part of data deleted from cache");
             return "Successful!";
         }
     }
@@ -49,6 +86,9 @@ public class LanguageService {
             country.getLanguages().add(language);
             languageRepository.save(language);
             countryRepository.save(country);
+
+            RequestCash.clear();
+            LOGGER.info("Cache cleared");
             return "Successful!";
         } else {
             return "Wrong at id (it must have been country id or language id)";
@@ -63,6 +103,8 @@ public class LanguageService {
             country.getLanguages().remove(language);
             languageRepository.save(language);
             countryRepository.save(country);
+            RequestCash.clear();
+            LOGGER.info("Cache cleared");
             return "Successful!";
         } else return "Wrong at id (it must have been country id or language id)";
     }
@@ -85,6 +127,8 @@ public class LanguageService {
                 countryRepository.save(country);
             }
         }
+        RequestCash.clear();
+        LOGGER.info("Cache cleared");
         return "Successful!";
     }
 
@@ -100,6 +144,13 @@ public class LanguageService {
             }
             languageRepository.delete(language);
 
+            if (RequestCash.containsKey(allLanguagesRequest)){
+                RequestCash.remove(allLanguagesRequest);
+            }
+            if (RequestCash.containsKey(languageByIdRequest+id)){
+                RequestCash.remove(languageByIdRequest+id);
+            }
+            LOGGER.info("All languages response and language by id response deleted if there are in cache");
             return "Successful deleted!";
         } else {
             return "object not found";
