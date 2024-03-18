@@ -105,14 +105,8 @@ public class CountryService {
             country.setName(name);
             countryRepository.save(country);
 
-            RequestCash.remove(ALL_COUNTRIES_REQUEST);
-            LOGGER.info("all country request was deleted from cache");
-            if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST + id)) {
-                List<Country> updatedCountry = (List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST + id);
-                updatedCountry.get(0).setName(name);
-                RequestCash.put(COUNTRY_BY_ID_REQUEST + id, updatedCountry);
-                LOGGER.info("Element in cache was updated");
-            }
+            RequestCash.clear();
+            LOGGER.info("cache cleared in func: updateNameCountry");
             return "Successful updated!";
         } else return "Error id";
     }
@@ -179,9 +173,8 @@ public class CountryService {
 
         countryRepository.delete(country);
 
-        RequestCash.remove(ALL_COUNTRIES_REQUEST);
-        RequestCash.remove(COUNTRY_BY_ID_REQUEST + countryId);
-        LOGGER.info("Part of country cache cleared");
+        RequestCash.clear();
+        LOGGER.info("Cache cleared in func: deleteCountry");
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
 

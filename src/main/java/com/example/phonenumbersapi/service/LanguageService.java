@@ -64,13 +64,8 @@ public class LanguageService {
             language.setName(name);
             languageRepository.save(language);
 
-            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
-                RequestCash.remove(ALL_LANGUAGES_REQUEST);
-            }
-            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
-                RequestCash.remove(LANGUAGE_BY_ID_REQUEST + id);
-            }
-            LOGGER.info("Part of data deleted from cache");
+            RequestCash.clear();
+            LOGGER.info("Cache cleared in func: updateLanguageName");
             return "Successful updated!";
         }
     }
@@ -142,13 +137,8 @@ public class LanguageService {
             }
             languageRepository.delete(language);
 
-            if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
-                RequestCash.remove(ALL_LANGUAGES_REQUEST);
-            }
-            if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
-                RequestCash.remove(LANGUAGE_BY_ID_REQUEST + id);
-            }
-            LOGGER.info("All languages response and language by id response deleted if there are in cache");
+            RequestCash.clear();
+            LOGGER.info("Cache cleared from func: deleteLanguageById");
             return "Successful deleted!";
         } else {
             return "object not found";
