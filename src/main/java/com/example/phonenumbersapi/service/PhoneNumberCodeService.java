@@ -67,7 +67,7 @@ public class PhoneNumberCodeService {
 
             RequestCash.clear();
             LOGGER.info("Cache cleared in function createPhoneNumberCode");
-            return "Successful!";
+            return "Successful created!";
         }
     }
 
@@ -82,7 +82,7 @@ public class PhoneNumberCodeService {
             }
             RequestCash.clear();
             LOGGER.info("Cache cleared in function updatePhoneNumberCode");
-            return "Successful!";
+            return "Successful updated!";
         }
     }
 
@@ -92,7 +92,7 @@ public class PhoneNumberCodeService {
             phoneNumberCodeRepository.deleteById(id);
             RequestCash.clear();
             LOGGER.info("Cache cleared in function deletePhoneNumberCode");
-            return "Successful";
+            return "Successful deleted";
         } else {
             return "Object with id " + id + " not found";
         }

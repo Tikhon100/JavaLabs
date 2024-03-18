@@ -97,7 +97,7 @@ public class CountryService {
         countryRepository.save(country);
 
         RequestCash.clear();
-        LOGGER.info("country cache cleared");
+        LOGGER.info("country cache cleared in func: createCountry");
         return "Successfully saved!";
     }
 
@@ -115,7 +115,7 @@ public class CountryService {
                 RequestCash.put(COUNTRY_BY_ID_REQUEST +id, updatedCountry);
                 LOGGER.info("Element in cache was updated");
             }
-            return "Successful!";
+            return "Successful updated!";
         } else return "Error id";
     }
 
@@ -129,8 +129,8 @@ public class CountryService {
             countryRepository.save(country);
 
             RequestCash.clear();
-            LOGGER.info("country cache cleared");
-            return "Successful!";
+            LOGGER.info("Country cache cleared in func: addLanguageToCountry");
+            return "Successful added!";
         } else return "Error id or this language already exist in country";
     }
 
@@ -144,8 +144,8 @@ public class CountryService {
             countryRepository.save(country);
 
             RequestCash.clear();
-            LOGGER.info("country cache cleared");
-            return "Successful!";
+            LOGGER.info("country cache cleared in func: deleteLanguageFromCountry");
+            return "Successful! deleted";
         }
         return "Wrong id or these country do not contains this language";
     }
@@ -162,8 +162,8 @@ public class CountryService {
             countryRepository.save(country);
 
             RequestCash.clear();
-            LOGGER.info("country cache cleared");
-            return "Successful!";
+            LOGGER.info("country cache cleared in func : addPhoneNumberCode");
+            return "Phone number code successful added!";
         }
         return "Error in id";
     }

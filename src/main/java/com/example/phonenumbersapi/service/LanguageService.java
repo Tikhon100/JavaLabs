@@ -73,7 +73,7 @@ public class LanguageService {
                 RequestCash.remove(languageByIdRequest+id);
             }
             LOGGER.info("Part of data deleted from cache");
-            return "Successful!";
+            return "Successful updated!";
         }
     }
 
@@ -88,8 +88,8 @@ public class LanguageService {
             countryRepository.save(country);
 
             RequestCash.clear();
-            LOGGER.info("Cache cleared");
-            return "Successful!";
+            LOGGER.info("Cache cleared in func: addCountryToLanguage");
+            return "Successful added!";
         } else {
             return "Wrong at id (it must have been country id or language id)";
         }
@@ -104,8 +104,8 @@ public class LanguageService {
             languageRepository.save(language);
             countryRepository.save(country);
             RequestCash.clear();
-            LOGGER.info("Cache cleared");
-            return "Successful!";
+            LOGGER.info("Cache cleared in func: deleteCountryFromLanguage");
+            return "Successful deleted!";
         } else return "Wrong at id (it must have been country id or language id)";
     }
 
@@ -128,8 +128,8 @@ public class LanguageService {
             }
         }
         RequestCash.clear();
-        LOGGER.info("Cache cleared");
-        return "Successful!";
+        LOGGER.info("Cache cleared in func: createLanguage");
+        return "Successful created!";
     }
 
 
