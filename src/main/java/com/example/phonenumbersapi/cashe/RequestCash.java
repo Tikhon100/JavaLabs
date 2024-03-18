@@ -27,6 +27,10 @@ public class RequestCash {
     public static void clear() {
         cache.clear();
     }
+
+    private RequestCash() {
+        throw new IllegalStateException("Utility class");
+    }
 }
 
 
