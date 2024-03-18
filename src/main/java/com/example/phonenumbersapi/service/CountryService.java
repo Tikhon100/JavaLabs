@@ -18,8 +18,8 @@ import java.util.logging.Logger;
 @Service
 @AllArgsConstructor
 public class CountryService {
-    private static final String allCountriesRequest = "http://localhost:8080/api/v1/country/all";
-    private static final String countryByIdRequest = "http://localhost:8080/api/v1/country/";
+    private static final String ALL_COUNTRIES_REQUEST = "http://localhost:8080/api/v1/country/all";
+    private static final String COUNTRY_BY_ID_REQUEST = "http://localhost:8080/api/v1/country/";
     private static final Logger LOGGER = Logger.getLogger(CountryService.class.getName());
     private CountryRepository countryRepository;
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
@@ -27,13 +27,13 @@ public class CountryService {
 
 
     public List<Country> getAllCountries() {
-        if (RequestCash.containsKey(allCountriesRequest)){
+        if (RequestCash.containsKey(ALL_COUNTRIES_REQUEST)){
             LOGGER.info("Getting all countries from cache");
-            return  (List<Country>) RequestCash.get(allCountriesRequest);
+            return  (List<Country>) RequestCash.get(ALL_COUNTRIES_REQUEST);
         }
         else {
             List<Country> countryList =  countryRepository.findAll();
-            RequestCash.put(allCountriesRequest,countryList);
+            RequestCash.put(ALL_COUNTRIES_REQUEST,countryList);
             LOGGER.info("Getting all countries from DB");
             return countryList;
         }
@@ -41,16 +41,16 @@ public class CountryService {
     }
 
     public Country getCountryById(Long id) {
-        if (RequestCash.containsKey(countryByIdRequest+id.toString())){
+        if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST +id.toString())){
             LOGGER.info("Getting country by id from cache");
-            return ((List<Country>) RequestCash.get(countryByIdRequest+id)).get(0);
+            return ((List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST +id)).get(0);
         }
         else {
             LOGGER.info("Getting country by id from DB");
             Country country = countryRepository.findById(id).orElse(null);
             List<Country> countryList = new ArrayList<>();
             countryList.add(country);
-            RequestCash.put(countryByIdRequest+id, countryList);
+            RequestCash.put(COUNTRY_BY_ID_REQUEST +id, countryList);
             return country;
         }
     }
@@ -107,12 +107,12 @@ public class CountryService {
             country.setName(name);
             countryRepository.save(country);
 
-            RequestCash.remove(allCountriesRequest);
+            RequestCash.remove(ALL_COUNTRIES_REQUEST);
             LOGGER.info("all country request was deleted from cache");
-            if (RequestCash.containsKey(countryByIdRequest+id)){
-                List <Country> updatedCountry = (List<Country>) RequestCash.get(countryByIdRequest+id);
+            if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST +id)){
+                List <Country> updatedCountry = (List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST +id);
                 updatedCountry.get(0).setName(name);
-                RequestCash.put(countryByIdRequest+id, updatedCountry);
+                RequestCash.put(COUNTRY_BY_ID_REQUEST +id, updatedCountry);
                 LOGGER.info("Element in cache was updated");
             }
             return "Successful!";
@@ -181,8 +181,8 @@ public class CountryService {
 
         countryRepository.delete(country);
 
-        RequestCash.remove(allCountriesRequest);
-        RequestCash.remove(countryByIdRequest+countryId);
+        RequestCash.remove(ALL_COUNTRIES_REQUEST);
+        RequestCash.remove(COUNTRY_BY_ID_REQUEST +countryId);
         LOGGER.info("Part of country cache cleared");
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
