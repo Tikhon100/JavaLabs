@@ -1,21 +1,34 @@
 package com.example.phonenumbersapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
 import lombok.Data;
+
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "countries")
-public class Country {
+public final class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @Column
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
@@ -33,4 +46,9 @@ public class Country {
             inverseJoinColumns = @JoinColumn(name = "language_id")
     )
     private List<Language> languages;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

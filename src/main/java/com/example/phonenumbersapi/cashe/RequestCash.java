@@ -30,7 +30,7 @@ public class RequestCash {
     }
 
     private RequestCash() {
-        
+
     }
 }
 

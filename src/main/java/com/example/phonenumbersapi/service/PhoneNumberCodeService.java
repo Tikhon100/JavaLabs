@@ -6,6 +6,7 @@ import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+
 
 @Service
 @AllArgsConstructor
@@ -24,14 +25,13 @@ public class PhoneNumberCodeService {
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private CountryRepository countryRepository;
 
-    private static final Logger LOGGER = Logger.getLogger(PhoneNumberCodeService.class.getName());
 
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
         if (RequestCash.containsKey(ALL_PHONE_NUMBER_CODES_REQUEST)) {
-            LOGGER.info("Getting all phone number code from cache");
+
             return (List<PhoneNumberCode>) RequestCash.get(ALL_PHONE_NUMBER_CODES_REQUEST);
         }
-        LOGGER.info("Getting data from DB");
+
         List<PhoneNumberCode> phoneNumberCodes = phoneNumberCodeRepository.findAll();
         RequestCash.put(ALL_PHONE_NUMBER_CODES_REQUEST, phoneNumberCodes);
         return phoneNumberCodes;
@@ -39,20 +39,20 @@ public class PhoneNumberCodeService {
 
     public PhoneNumberCode getPhoneNumberCodeById(Long id) {
         if (RequestCash.containsKey(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)) {
-            LOGGER.info("Getting phone number code by id from cache");
+
             return ((List<PhoneNumberCode>) RequestCash.get(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)).get(0);
         } else {
-            PhoneNumberCode phoneNumberCode = phoneNumberCodeRepository.findById(id).orElse(null);
+            PhoneNumberCode phoneNumberCode = findPhoneNumberCodeById(id);
             List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
             phoneNumberCodeList.add(phoneNumberCode);
             RequestCash.put(PHONE_NUMBER_CODE_BY_ID_REQUEST + id, phoneNumberCodeList);
-            LOGGER.info("Getting phone number code by id from DB");
+
             return phoneNumberCode;
         }
     }
 
     public String createPhoneNumberCode(Long countryId, String code) {
-        Country country = countryRepository.findById(countryId).orElse(null);
+        Country country = findCountryById(countryId);
         if (country == null) {
             return "Wrong id, operation failed";
         } else {
@@ -66,13 +66,13 @@ public class PhoneNumberCodeService {
             countryRepository.save(country);
 
             RequestCash.clear();
-            LOGGER.info("Cache cleared in function createPhoneNumberCode");
+
             return "Successful created!";
         }
     }
 
     public String updatePhoneNumberCode(Long id, String code) {
-        PhoneNumberCode phoneNumberCode = phoneNumberCodeRepository.findById(id).orElse(null);
+        PhoneNumberCode phoneNumberCode = findPhoneNumberCodeById(id);
         if (phoneNumberCode == null) {
             return "Object not found";
         } else {
@@ -81,7 +81,7 @@ public class PhoneNumberCodeService {
                 phoneNumberCodeRepository.save(phoneNumberCode);
             }
             RequestCash.clear();
-            LOGGER.info("Cache cleared in function updatePhoneNumberCode");
+
             return "Successful updated!";
         }
     }
@@ -91,10 +91,17 @@ public class PhoneNumberCodeService {
         if (optionalPhoneNumberCode.isPresent()) {
             phoneNumberCodeRepository.deleteById(id);
             RequestCash.clear();
-            LOGGER.info("Cache cleared in function deletePhoneNumberCode");
+
             return "Successful deleted";
         } else {
             return "Object with id " + id + " not found";
         }
+    }
+
+    private Country findCountryById(Long id){
+        return countryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Country with id: " + id +" not found"));
+    }
+    private PhoneNumberCode findPhoneNumberCodeById(Long id){
+        return phoneNumberCodeRepository.findById(id).orElseThrow(()->new EntityNotFoundException(("Phone number code with id" + id + "not found")));
     }
 }
