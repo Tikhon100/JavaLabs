@@ -23,7 +23,9 @@ public class LoggingAspect {
     public void logBefore(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         String methodName = joinPoint.getSignature().getName();
-        logger.info("Method: {}(), args: {}", methodName, Arrays.toString(args));
+        if (logger.isInfoEnabled()) {
+            logger.info("Method: {}(), args: {}", methodName, Arrays.toString(args));
+        }
     }
 
     @AfterReturning(pointcut = "allServiceMethods()", returning = "result")
