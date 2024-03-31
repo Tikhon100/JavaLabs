@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
-
     @Query("SELECT DISTINCT c FROM Country c JOIN c.languages l WHERE l.name IN :languages")
     List<Country> getCountriesByLanguages(List<String> languages);
 }
