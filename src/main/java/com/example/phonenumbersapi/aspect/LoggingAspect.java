@@ -3,7 +3,11 @@ package com.example.phonenumbersapi.aspect;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,40 +17,40 @@ import java.util.Arrays;
 @Aspect
 @Component
 public class LoggingAspect {
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Pointcut("@annotation(com.example.phonenumbersapi.aspect.Logged)")
     private void allServiceMethods() {
     }
 
     @Before("allServiceMethods()")
-    public void logBefore(JoinPoint joinPoint) {
+    public void logBefore(final JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         String methodName = joinPoint.getSignature().getName();
-        if (logger.isInfoEnabled()) {
-            logger.info("Method: {}(), args: {}", methodName, Arrays.toString(args));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Method: {}(), args: {}", methodName, Arrays.toString(args));
         }
     }
 
     @AfterReturning(pointcut = "allServiceMethods()", returning = "result")
-    public void logAfter(JoinPoint joinPoint, Object result) {
+    public void logAfter(final JoinPoint joinPoint, final Object result) {
         String methodName = joinPoint.getSignature().getName();
-        logger.info("Method: {}(), status: {}", methodName, result);
+        LOGGER.info("Method: {}(), status: {}", methodName, result);
     }
 
     @AfterThrowing(pointcut = "allServiceMethods()", throwing = "exception")
-    public void logException(JoinPoint joinPoint, Throwable exception) {
+    public void logException(final JoinPoint joinPoint, final Throwable exception) {
         String methodName = joinPoint.getSignature().getName();
-        logger.error("Exception in method: {}(), message: {}", methodName, exception.getMessage());
+        LOGGER.error("Exception in method: {}(), message: {}", methodName, exception.getMessage());
     }
 
     @PostConstruct
     public void initAspect() {
-        logger.info("Aspect is initialized");
+        LOGGER.info("Aspect is initialized");
     }
 
     @PreDestroy
     public void destroyAspect() {
-        logger.info("Aspect is destroyed");
+        LOGGER.info("Aspect is destroyed");
     }
 }

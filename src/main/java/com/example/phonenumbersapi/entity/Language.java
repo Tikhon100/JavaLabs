@@ -1,7 +1,13 @@
 package com.example.phonenumbersapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import lombok.Data;
 
 import java.util.List;
@@ -17,7 +23,8 @@ public class Language {
 
     private String name;
 
-    @ManyToMany(mappedBy = "languages", cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "languages",
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnoreProperties("languages")
     private List<Country> countries;
 }

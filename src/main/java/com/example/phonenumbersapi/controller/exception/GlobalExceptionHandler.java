@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice(annotations = MyExceptionHandler.class)
-public class GlobalExceptionHandler {
+public final class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Response> badRequestException(EntityNotFoundException ex) {
+    public ResponseEntity<Response> badRequestException(final EntityNotFoundException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
         response.setDescription("You try to use object that not exist");
@@ -26,25 +26,27 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Response> badRequestException(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<Response> badRequestException(final MethodArgumentTypeMismatchException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
-        response.setDescription("The request is incorrect, please refer to the documentation to send the request correctly");
+        response.setDescription(
+                "The request is incorrect, please refer to the documentation to send the request correctly");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Response> badRequestException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<Response> badRequestException(final HttpMessageNotReadableException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
-        response.setDescription("The request body was passed uncorrected, please refer to the documentation to send the request correctly");
+        response
+                .setDescription("The request body was passed uncorrected, please refer to the documentation");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Response> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+    public ResponseEntity<Response> handleMissingServletRequestParameterException(final MissingServletRequestParameterException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
         response.setDescription("One or more required request parameters are missing");
@@ -54,7 +56,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ResponseEntity<Response> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+    public ResponseEntity<Response> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
         response.setDescription("The HTTP method specified in the request is not supported for this resource");
@@ -64,7 +66,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingPathVariableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Response> handleMissingPathVariableException(MissingPathVariableException ex) {
+    public ResponseEntity<Response> handleMissingPathVariableException(final MissingPathVariableException ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
         response.setDescription("One or more required path variables are missing");
@@ -74,7 +76,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Response> handleValidationExceptions(Exception ex) {
+    public ResponseEntity<Response> handleValidationExceptions(final Exception ex) {
         Response response = new Response();
         response.setMessage(ex.getLocalizedMessage());
         response.setDescription("Unknown error, read the logs to find out its cause");

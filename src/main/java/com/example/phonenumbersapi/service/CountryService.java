@@ -14,7 +14,10 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 
 @Service
@@ -42,7 +45,7 @@ public class CountryService {
     }
 
     @Logged
-    public Country getCountryById(Long id) {
+    public Country getCountryById(final Long id) {
         if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
 
             return ((List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
@@ -57,14 +60,14 @@ public class CountryService {
     }
 
     @Logged
-    public List<Country> getCountriesByLanguages(List<String> languages) {
+    public List<Country> getCountriesByLanguages(final List<String> languages) {
 
         return countryRepository.getCountriesByLanguages(languages);
     }
 
     @Logged
     @Transactional
-    public String createCountry(Country country) {
+    public String createCountry(final Country country) {
        Set<String> languageNames = new HashSet<>();
 
 
@@ -107,7 +110,7 @@ public class CountryService {
     }
 
     @Logged
-    public String updateNameCountry(Long id, String name) {
+    public String updateNameCountry(final Long id, final String name) {
         Country country = findCountryById(id);
         if (country != null) {
             country.setName(name);
@@ -116,11 +119,13 @@ public class CountryService {
             RequestCash.clear();
 
             return "Successful updated!";
-        } else return "Error id";
+        } else {
+            return "Error id";
+        }
     }
 
     @Logged
-    public String addLanguageToCountry(Long countryId, Long languageId) {
+    public String addLanguageToCountry(final Long countryId, final Long languageId) {
         Country country = findCountryById(countryId);
         Language language = findLanguageById(languageId);
 
@@ -133,15 +138,18 @@ public class CountryService {
             RequestCash.clear();
 
             return "Successful added!";
-        } else return "Error id or this language already exist in country";
+        } else {
+            return "Error id or this language already exist in country";
+        }
     }
 
     @Logged
-    public String deleteLanguageFromCountry(Long countryId, Long languageId)  {
+    public String deleteLanguageFromCountry(final Long countryId, final Long languageId)  {
         Country country = findCountryById(countryId);
         Language language = findLanguageById(languageId);
 
-        if (country != null && language != null && country.getLanguages().contains(language) && language.getCountries().contains(country)) {
+        if (country != null && language != null && country.getLanguages().contains(language)
+                && language.getCountries().contains(country)) {
             language.getCountries().remove(country);
             country.getLanguages().remove(language);
             languageRepository.save(language);
@@ -154,7 +162,7 @@ public class CountryService {
     }
 
     @Logged
-    public String addPhoneNumberCode(Long id, String code) {
+    public String addPhoneNumberCode(final Long id, final String code) {
         Country country = findCountryById(id);
 
         if (country != null) {
@@ -174,7 +182,7 @@ public class CountryService {
 
     @Logged
     @Transactional
-    public void deleteCountry(Long countryId) {
+    public void deleteCountry(final Long countryId) {
         Country country = countryRepository.findById(countryId)
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + countryId));
         List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>(country.getPhoneNumberCodes());
@@ -190,12 +198,14 @@ public class CountryService {
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
 
-    private Country findCountryById(Long id){
-       return countryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Country with id: " + id +" not found"));
+    private Country findCountryById(final Long id) {
+       return countryRepository.findById(id).orElseThrow(() ->
+               new EntityNotFoundException("Country with id: " + id + " not found"));
     }
 
-    private Language findLanguageById(Long id){
-        return languageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Language with id: " + id +" not found"));
+    private Language findLanguageById(final Long id) {
+        return languageRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Language with id: " + id + " not found"));
     }
 
 }

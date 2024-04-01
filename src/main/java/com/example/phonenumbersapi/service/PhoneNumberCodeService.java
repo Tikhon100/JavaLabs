@@ -37,7 +37,7 @@ public class PhoneNumberCodeService {
         return phoneNumberCodes;
     }
 
-    public PhoneNumberCode getPhoneNumberCodeById(Long id) {
+    public PhoneNumberCode getPhoneNumberCodeById(final Long id) {
         if (RequestCash.containsKey(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)) {
 
             return ((List<PhoneNumberCode>) RequestCash.get(PHONE_NUMBER_CODE_BY_ID_REQUEST + id)).get(0);
@@ -51,7 +51,7 @@ public class PhoneNumberCodeService {
         }
     }
 
-    public String createPhoneNumberCode(Long countryId, String code) {
+    public String createPhoneNumberCode(final Long countryId, final String code) {
         Country country = findCountryById(countryId);
         if (country == null) {
             return "Wrong id, operation failed";
@@ -71,7 +71,7 @@ public class PhoneNumberCodeService {
         }
     }
 
-    public String updatePhoneNumberCode(Long id, String code) {
+    public String updatePhoneNumberCode(final Long id, final String code) {
         PhoneNumberCode phoneNumberCode = findPhoneNumberCodeById(id);
         if (phoneNumberCode == null) {
             return "Object not found";
@@ -86,7 +86,7 @@ public class PhoneNumberCodeService {
         }
     }
 
-    public String deletePhoneNumberCode(Long id) {
+    public String deletePhoneNumberCode(final Long id) {
         Optional<PhoneNumberCode> optionalPhoneNumberCode = phoneNumberCodeRepository.findById(id);
         if (optionalPhoneNumberCode.isPresent()) {
             phoneNumberCodeRepository.deleteById(id);
@@ -98,10 +98,12 @@ public class PhoneNumberCodeService {
         }
     }
 
-    private Country findCountryById(Long id){
-        return countryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Country with id: " + id +" not found"));
+    private Country findCountryById(final Long id) {
+        return countryRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Country with id: " + id + " not found"));
     }
-    private PhoneNumberCode findPhoneNumberCodeById(Long id){
-        return phoneNumberCodeRepository.findById(id).orElseThrow(()->new EntityNotFoundException(("Phone number code with id" + id + "not found")));
+    private PhoneNumberCode findPhoneNumberCodeById(Long id) {
+        return phoneNumberCodeRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(("Phone number code with id" + id + "not found")));
     }
 }

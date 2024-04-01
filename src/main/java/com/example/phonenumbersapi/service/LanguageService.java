@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 @Service
 @AllArgsConstructor
@@ -38,7 +38,7 @@ public class LanguageService {
         }
     }
 
-    public Language getLanguageById(Long id) {
+    public Language getLanguageById(final Long id) {
 
         if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
 
@@ -53,7 +53,7 @@ public class LanguageService {
         }
     }
 
-    public String updateLanguageName(Long id, String name) {
+    public String updateLanguageName(final Long id, final String name) {
         if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
         }
@@ -72,7 +72,7 @@ public class LanguageService {
     }
 
 
-    public String addCountryToLanguage(Long languageId, Long countryId) {
+    public String addCountryToLanguage(final Long languageId, final Long countryId) {
         Language language = findLanguageById(languageId);
         Country country = findCountryById(countryId);
         if (language != null && country != null && !language.getCountries().contains(country)) {
@@ -89,10 +89,11 @@ public class LanguageService {
         }
     }
 
-    public String deleteCountryFromLanguage(Long languageId, Long countryId) {
+    public String deleteCountryFromLanguage(final Long languageId, final Long countryId) {
         Language language = findLanguageById(languageId);
         Country country = findCountryById(countryId);
-        if (language != null && country != null && language.getCountries().contains(country) && country.getLanguages().contains(language)) {
+        if (language != null && country != null && language.getCountries().
+                contains(country) && country.getLanguages().contains(language)) {
             language.getCountries().remove(country);
             country.getLanguages().remove(language);
             languageRepository.save(language);
@@ -100,10 +101,12 @@ public class LanguageService {
             RequestCash.clear();
 
             return "Successful deleted!";
-        } else return "Wrong at id (it must have been country id or language id)";
+        } else {
+            return "Wrong at id (it must have been country id or language id)";
+        }
     }
 
-    public String createLanguage(String name, List<Long> countryIds) {
+    public String createLanguage(final String name, final List<Long> countryIds) {
         if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
         }
@@ -127,7 +130,7 @@ public class LanguageService {
     }
 
 
-    public String deleteLanguageById(Long id) {
+    public String deleteLanguageById(final Long id) {
         Language language = findLanguageById(id);
 
         if (language != null) {
@@ -146,12 +149,14 @@ public class LanguageService {
         }
     }
 
-    private Country findCountryById(Long id){
-        return countryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Country with id: " + id +" not found"));
+    private Country findCountryById(final Long id) {
+        return countryRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Country with id: " + id + " not found"));
     }
 
-    private Language findLanguageById(Long id){
-        return languageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Language with id: " + id +" not found"));
+    private Language findLanguageById(final Long id) {
+        return languageRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Language with id: " + id + " not found"));
     }
 
 }

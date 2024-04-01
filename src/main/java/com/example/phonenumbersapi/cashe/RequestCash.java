@@ -6,22 +6,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class RequestCash {
+public final class RequestCash {
     private static Map<String, Object> cache = new HashMap<>();
 
-    public static void put(String key, Object value) {
+    public static void put(final String key, final Object value) {
         cache.put(key, value);
     }
 
-    public static Object get(String key) {
+    public static Object get(final String key) {
         return cache.get(key);
     }
 
-    public static void remove(String key) {
+    public static void remove(final String key) {
         cache.remove(key);
     }
 
-    public static boolean containsKey(String key) {
+    public static boolean containsKey(final String key) {
         return cache.containsKey(key);
     }
 
