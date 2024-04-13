@@ -154,7 +154,7 @@ class PhoneNumberCodeServiceTest {
     }
 
     @Test
-    public void addListPhoneNumberCode_ShouldReturnSuccessfully_WhenCountryExists() {
+    void addListPhoneNumberCode_ShouldReturnSuccessfully_WhenCountryExists() {
         // Arrange
         Long countryId = 1L;
         Country country = new Country(countryId, "USA");
@@ -184,7 +184,7 @@ class PhoneNumberCodeServiceTest {
 
 
     @Test
-    public void addListPhoneNumberCode_ShouldSkipDuplicateCodes_WhenCodeAlreadyExists() {
+    void addListPhoneNumberCode_ShouldSkipDuplicateCodes_WhenCodeAlreadyExists() {
         // Arrange
         Long countryId = 1L;
         Country country = new Country(countryId, "USA");
