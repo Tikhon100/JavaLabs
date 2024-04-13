@@ -211,6 +211,55 @@ class PhoneNumberCodeServiceTest {
         verify(countryRepository, times(1)).save(country);
     }
 
+    @Test
+    void addListPhoneNumberCode_ShouldAddPhoneNumberCode_WhenCodeDoesNotExist() {
+        // Arrange
+        List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
+        Country country = new Country();
+        country.setId(1L);
+        country.setPhoneNumberCodes(new ArrayList<>()); // Инициализация списка phoneNumberCodes
+        PhoneNumberCode phoneNumberCode = new PhoneNumberCode("123", country);
+        phoneNumberCodeList.add(phoneNumberCode);
 
+        when(countryRepository.findById(country.getId())).thenReturn(Optional.of(country));
+        when(phoneNumberCodeRepository.save(any(PhoneNumberCode.class))).thenReturn(phoneNumberCode);
+        when(countryRepository.save(any(Country.class))).thenReturn(country);
+
+        // Act
+        String result = phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList);
+
+        // Assert
+        assertEquals("Successfully", result);
+        assertTrue(country.getPhoneNumberCodes().contains(phoneNumberCode));
+        verify(countryRepository, times(1)).findById(country.getId());
+        verify(phoneNumberCodeRepository, times(1)).save(any(PhoneNumberCode.class));
+        verify(countryRepository, times(1)).save(any(Country.class));
+    }
+
+    @Test
+    void addListPhoneNumberCode_ShouldNotAddPhoneNumberCode_WhenCodeAlreadyExists() {
+        // Arrange
+        List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
+        Country country = new Country();
+        country.setId(1L);
+        List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>();
+        PhoneNumberCode existingPhoneNumberCode = new PhoneNumberCode("123", country);
+        phoneNumberCodes.add(existingPhoneNumberCode);
+        country.setPhoneNumberCodes(phoneNumberCodes);
+        PhoneNumberCode newPhoneNumberCode = new PhoneNumberCode("123", country);
+        phoneNumberCodeList.add(newPhoneNumberCode);
+
+        when(countryRepository.findById(country.getId())).thenReturn(Optional.of(country));
+
+        // Act
+        String result = phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList);
+
+        // Assert
+        assertEquals("Successfully", result);
+        assertFalse(country.getPhoneNumberCodes().contains(newPhoneNumberCode));
+        verify(countryRepository, times(1)).findById(country.getId());
+        verify(phoneNumberCodeRepository, never()).save(any(PhoneNumberCode.class));
+        verify(countryRepository, never()).save(any(Country.class));
+    }
 
 }
