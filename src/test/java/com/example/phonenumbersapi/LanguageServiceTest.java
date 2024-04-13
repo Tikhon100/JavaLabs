@@ -133,7 +133,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void addCountryToLanguage_ShouldReturnWrongId_WhenInvalidLanguageIdProvided() {
+    void addCountryToLanguage_ShouldReturnWrongId_WhenInvalidLanguageIdProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -142,7 +142,6 @@ class LanguageServiceTest {
 
         // Act
         String result = languageService.addCountryToLanguage(languageId, countryId);
-
         // Assert
         assertEquals("Wrong at id (it must have been country id or language id)", result);
         verify(languageRepository, never()).save(any());
@@ -150,7 +149,7 @@ class LanguageServiceTest {
     }
 
     @Test
-    public void addCountryToLanguage_ShouldReturnWrongId_WhenInvalidCountryIdProvided() {
+    void addCountryToLanguage_ShouldReturnWrongId_WhenInvalidCountryIdProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -172,7 +171,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void addCountryToLanguage_ShouldReturnSuccessfulAdded_WhenValidLanguageAndCountryIdsProvided() {
+    void addCountryToLanguage_ShouldReturnSuccessfulAdded_WhenValidLanguageAndCountryIdsProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -197,7 +196,7 @@ class LanguageServiceTest {
     }
 
     @Test
-    public void addCountryToLanguage_ShouldReturnWrongId_WhenCountryAlreadyAssociatedWithLanguage() {
+    void addCountryToLanguage_ShouldReturnWrongId_WhenCountryAlreadyAssociatedWithLanguage() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -225,7 +224,7 @@ class LanguageServiceTest {
     }
 
     @Test
-    public void deleteCountryFromLanguage_ShouldReturnSuccessfulDeleted_WhenValidLanguageAndCountryIdsProvided() {
+    void deleteCountryFromLanguage_ShouldReturnSuccessfulDeleted_WhenValidLanguageAndCountryIdsProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -257,7 +256,7 @@ class LanguageServiceTest {
     }
 
     @Test
-    public void deleteCountryFromLanguage_ShouldReturnWrongId_WhenInvalidLanguageIdProvided() {
+    void deleteCountryFromLanguage_ShouldReturnWrongId_WhenInvalidLanguageIdProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -274,7 +273,7 @@ class LanguageServiceTest {
     }
 
     @Test
-    public void deleteCountryFromLanguage_ShouldReturnWrongId_WhenInvalidCountryIdProvided() {
+    void deleteCountryFromLanguage_ShouldReturnWrongId_WhenInvalidCountryIdProvided() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -295,7 +294,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void deleteCountryFromLanguage_ShouldReturnWrongId_WhenCountryNotAssociatedWithLanguage() {
+    void deleteCountryFromLanguage_ShouldReturnWrongId_WhenCountryNotAssociatedWithLanguage() {
         // Arrange
         Long languageId = 1L;
         Long countryId = 2L;
@@ -318,7 +317,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void createLanguage_ShouldReturnSuccessfulCreated_WhenValidNameAndNoCountryIdsProvided() {
+    void createLanguage_ShouldReturnSuccessfulCreated_WhenValidNameAndNoCountryIdsProvided() {
         // Arrange
         String name = "English";
 
@@ -336,7 +335,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void createLanguage_ShouldReturnBadRequest_WhenLanguageWithSameNameAlreadyExists() {
+    void createLanguage_ShouldReturnBadRequest_WhenLanguageWithSameNameAlreadyExists() {
         // Arrange
         String name = "English";
 
@@ -357,7 +356,7 @@ class LanguageServiceTest {
 
 
     @Test
-    public void deleteLanguageById_ShouldReturnObjectNotFound_WhenLanguageDoesNotExist() {
+    void deleteLanguageById_ShouldReturnObjectNotFound_WhenLanguageDoesNotExist() {
         // Arrange
         Long languageId = 1L;
 

@@ -31,9 +31,9 @@ public class CountryService {
 
     @Logged
     public Country getCountryById(final Long id) {
-        return findCountryById(id).get();
+        Optional <Country> country = findCountryById(id);
+        return country.orElse(null);
     }
-
     @Logged
     public List<Country> getCountriesByLanguages(final List<String> languages) {
 

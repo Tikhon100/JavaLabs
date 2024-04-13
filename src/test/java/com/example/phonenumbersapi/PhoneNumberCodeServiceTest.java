@@ -1,9 +1,11 @@
 package com.example.phonenumbersapi;
 
 import com.example.phonenumbersapi.entity.Country;
+import com.example.phonenumbersapi.entity.Language;
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
+import com.example.phonenumbersapi.service.LanguageService;
 import com.example.phonenumbersapi.service.PhoneNumberCodeService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +30,8 @@ class PhoneNumberCodeServiceTest {
 
     @InjectMocks
     private PhoneNumberCodeService phoneNumberCodeService;
+    @InjectMocks
+    private LanguageService languageService;
 
     @BeforeEach
     void setUp() {
@@ -148,5 +152,65 @@ class PhoneNumberCodeServiceTest {
         verify(countryRepository, times(1)).findById(phoneNumberCode.getCountry().getId());
         verify(phoneNumberCodeRepository, never()).save(any(PhoneNumberCode.class));
     }
+
+    @Test
+    public void addListPhoneNumberCode_ShouldReturnSuccessfully_WhenCountryExists() {
+        // Arrange
+        Long countryId = 1L;
+        Country country = new Country(countryId, "USA");
+        List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
+        PhoneNumberCode code1 = new PhoneNumberCode("123", null);
+        PhoneNumberCode code2 = new PhoneNumberCode("456", null);
+        phoneNumberCodeList.add(code1);
+        phoneNumberCodeList.add(code2);
+
+        country.setPhoneNumberCodes(new ArrayList<>()); // Инициализируем список countryCodeList
+
+        when(countryRepository.findById(countryId)).thenReturn(Optional.of(country));
+        when(phoneNumberCodeRepository.save(any(PhoneNumberCode.class))).thenReturn(null);
+        when(countryRepository.save(country)).thenReturn(country);
+
+        // Act
+        String result = phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList, countryId);
+
+        // Assert
+        assertEquals("Successfully!", result);
+        assertTrue(country.getPhoneNumberCodes().contains(code1));
+        assertTrue(country.getPhoneNumberCodes().contains(code2));
+        verify(countryRepository, times(1)).findById(countryId);
+        verify(phoneNumberCodeRepository, times(2)).save(any(PhoneNumberCode.class));
+        verify(countryRepository, times(1)).save(country);
+    }
+
+
+    @Test
+    public void addListPhoneNumberCode_ShouldSkipDuplicateCodes_WhenCodeAlreadyExists() {
+        // Arrange
+        Long countryId = 1L;
+        Country country = new Country(countryId, "USA");
+        List<PhoneNumberCode> phoneNumberCodeList = new ArrayList<>();
+        PhoneNumberCode code1 = new PhoneNumberCode("123", null);
+        PhoneNumberCode code2 = new PhoneNumberCode("456", null);
+        phoneNumberCodeList.add(code1);
+        phoneNumberCodeList.add(code2);
+        country.setPhoneNumberCodes(new ArrayList<>()); // Инициализируем список countryCodeList
+
+        when(countryRepository.findById(countryId)).thenReturn(Optional.of(country));
+        when(phoneNumberCodeRepository.save(any(PhoneNumberCode.class))).thenReturn(null);
+        when(countryRepository.save(country)).thenReturn(country);
+
+        // Act
+        String result = phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList, countryId);
+
+        // Assert
+        assertEquals("Successfully!", result);
+        assertTrue(country.getPhoneNumberCodes().contains(code1));
+        assertTrue(country.getPhoneNumberCodes().contains(code2));
+        verify(countryRepository, times(1)).findById(countryId);
+        verify(phoneNumberCodeRepository, times(2)).save(any(PhoneNumberCode.class));
+        verify(countryRepository, times(1)).save(country);
+    }
+
+
 
 }
