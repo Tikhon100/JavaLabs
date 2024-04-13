@@ -5,6 +5,7 @@ import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
 import com.example.phonenumbersapi.service.PhoneNumberCodeService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -147,6 +148,5 @@ class PhoneNumberCodeServiceTest {
         verify(countryRepository, times(1)).findById(phoneNumberCode.getCountry().getId());
         verify(phoneNumberCodeRepository, never()).save(any(PhoneNumberCode.class));
     }
-
 
 }

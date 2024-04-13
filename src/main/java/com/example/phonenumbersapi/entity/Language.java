@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -34,6 +35,11 @@ public class Language {
     private List<Country> countries;
 
     public Language(String name){
+        this.name = name;
+    }
+
+    public Language(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 }

@@ -53,7 +53,8 @@ public class CountryService {
         }
 
 
-        for (PhoneNumberCode phoneNumberCode : country.getPhoneNumberCodes()) {
+        List<PhoneNumberCode> phoneNumberCodes = country.getPhoneNumberCodes();
+        for (PhoneNumberCode phoneNumberCode : phoneNumberCodes) {
             phoneNumberCode.setCountry(country);
         }
 

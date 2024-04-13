@@ -257,5 +257,112 @@ class CountryServiceTest {
     }
 
 
+    @Test
+    void deleteCountry_ShouldDeleteCountryAndPhoneNumberCodes() {
+        // Arrange
+        Long countryId = 1L;
+
+        Country country = new Country("Test Country");
+        country.setId(countryId);
+        country.setLanguages(new ArrayList<>()); // Инициализируем список languages
+
+        List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>();
+        phoneNumberCodes.add(new PhoneNumberCode("123", country));
+        phoneNumberCodes.add(new PhoneNumberCode("456", country));
+
+        country.setPhoneNumberCodes(phoneNumberCodes);
+
+        Language language = new Language("English");
+        language.setCountries(new ArrayList<>()); // Инициализируем список countries
+        language.getCountries().add(country);
+        country.getLanguages().add(language);
+
+        when(countryRepository.findById(countryId)).thenReturn(Optional.of(country));
+
+        // Act
+        countryService.deleteCountry(countryId);
+
+        // Assert
+        verify(countryRepository, times(1)).delete(country);
+        verify(phoneNumberCodeRepository, times(1)).deleteAll(phoneNumberCodes);
+    }
+    @Test
+    void deleteCountry_ThrowsEntityNotFoundExceptionWhenCountryNotFound() {
+        // Arrange
+        Long countryId = 1L;
+
+        when(countryRepository.findById(countryId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(EntityNotFoundException.class, () -> countryService.deleteCountry(countryId));
+        verify(countryRepository, never()).delete(any());
+        verify(phoneNumberCodeRepository, never()).deleteAll(any());
+    }
+
+    @Test
+    void createCountry_ShouldSaveCountrySuccessfully() {
+        // Arrange
+        Country country = new Country("Test Country");
+        country.setLanguages(new ArrayList<>()); // Инициализируем список languages
+        country.setPhoneNumberCodes(new ArrayList<>()); // Инициализируем список phoneNumberCodes
+
+        Language language1 = new Language("English");
+        Language language2 = new Language("French");
+
+        country.getLanguages().add(language1);
+        country.getLanguages().add(language2);
+
+        PhoneNumberCode phoneNumberCode1 = new PhoneNumberCode("123");
+        PhoneNumberCode phoneNumberCode2 = new PhoneNumberCode("456");
+
+        country.getPhoneNumberCodes().add(phoneNumberCode1);
+        country.getPhoneNumberCodes().add(phoneNumberCode2);
+
+        Set<String> languageNames = new HashSet<>();
+        languageNames.add("English");
+        languageNames.add("French");
+
+        when(countryRepository.save(country)).thenReturn(country);
+        when(languageRepository.findByName(anyString())).thenReturn(null);
+
+        // Act
+        String result = countryService.createCountry(country);
+
+        // Assert
+        verify(countryRepository, times(1)).save(country);
+        verify(languageRepository, times(2)).findByName(anyString());
+        verify(languageRepository, times(2)).save(any(Language.class));
+        assertEquals("Successfully saved!", result);
+    }
+
+    @Test
+    void createCountry_ShouldReturnBadRequestOnDuplicateLanguages() {
+        // Arrange
+        Country country = new Country("Test Country");
+        country.setLanguages(new ArrayList<>()); // Инициализируем список languages
+        country.setPhoneNumberCodes(new ArrayList<>()); // Инициализируем список phoneNumberCodes
+
+        Language language1 = new Language("English");
+        Language language2 = new Language("English");
+
+        country.getLanguages().add(language1);
+        country.getLanguages().add(language2);
+
+        PhoneNumberCode phoneNumberCode1 = new PhoneNumberCode("123");
+        PhoneNumberCode phoneNumberCode2 = new PhoneNumberCode("456");
+
+        country.getPhoneNumberCodes().add(phoneNumberCode1);
+        country.getPhoneNumberCodes().add(phoneNumberCode2);
+
+        Set<String> languageNames = new HashSet<>();
+        languageNames.add("English");
+
+        // Act
+        String result = countryService.createCountry(country);
+
+        // Assert
+        assertEquals("Bad request, do not share the same languages in the same country", result);
+    }
+
 
 }
