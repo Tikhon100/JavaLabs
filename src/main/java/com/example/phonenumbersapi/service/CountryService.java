@@ -156,9 +156,9 @@ public class CountryService {
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + countryId));
         List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>(country.getPhoneNumberCodes());
 
-        country.getLanguages().forEach(language -> {
-            language.getCountries().remove(country);
-        });
+        country.getLanguages().forEach(language ->
+            language.getCountries().remove(country)
+        );
         country.getLanguages().clear();
 
         countryRepository.delete(country);
@@ -173,5 +173,4 @@ public class CountryService {
     private Optional <Language> findLanguageById(final Long id) {
         return languageRepository.findById(id);
     }
-
 }
