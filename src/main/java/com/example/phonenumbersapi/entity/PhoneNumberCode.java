@@ -11,8 +11,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+
+@NoArgsConstructor
+@Setter
+@Getter
 @Entity
 @Table(name = "phone_number_codes")
 public class PhoneNumberCode {
@@ -29,4 +35,12 @@ public class PhoneNumberCode {
 
     @JoinColumn(name = "country_id")
     private Country country;
+
+    public PhoneNumberCode(String code, Country country) {
+        this.code = code;
+        this.country = country;
+    }
+    public PhoneNumberCode(String code) {
+        this.code = code;
+    }
 }

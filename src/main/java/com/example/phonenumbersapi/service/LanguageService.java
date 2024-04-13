@@ -1,6 +1,5 @@
 package com.example.phonenumbersapi.service;
 
-import com.example.phonenumbersapi.cashe.RequestCash;
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
 import com.example.phonenumbersapi.repository.CountryRepository;
@@ -17,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class LanguageService {
 
-    private static final String ALL_LANGUAGES_REQUEST = "http://localhost:8080/api/v1/language/all";
-    private static final String LANGUAGE_BY_ID_REQUEST = "http://localhost:8080/api/v1/language/";
 
     private LanguageRepository languageRepository;
     private CountryRepository countryRepository;
@@ -26,31 +23,11 @@ public class LanguageService {
 
 
     public List<Language> getAllLanguages() {
-        if (RequestCash.containsKey(ALL_LANGUAGES_REQUEST)) {
-
-            return (List<Language>) RequestCash.get(ALL_LANGUAGES_REQUEST);
-        } else {
-
-            List<Language> languageList = languageRepository.findAll();
-            RequestCash.put(ALL_LANGUAGES_REQUEST, languageList);
-
-            return languageList;
-        }
+        return languageRepository.findAll();
     }
 
     public Language getLanguageById(final Long id) {
-
-        if (RequestCash.containsKey(LANGUAGE_BY_ID_REQUEST + id)) {
-
-            return ((List<Language>) RequestCash.get(LANGUAGE_BY_ID_REQUEST + id)).get(0);
-        } else {
-
-            Language language = findLanguageById(id);
-            List<Language> languageList = new ArrayList<>();
-            languageList.add(language);
-            RequestCash.put(LANGUAGE_BY_ID_REQUEST + id, languageList);
-            return language;
-        }
+        return findLanguageById(id);
     }
 
     public String updateLanguageName(final Long id, final String name) {
@@ -64,8 +41,6 @@ public class LanguageService {
         } else {
             language.setName(name);
             languageRepository.save(language);
-
-            RequestCash.clear();
 
             return "Successful updated!";
         }
@@ -81,7 +56,6 @@ public class LanguageService {
             languageRepository.save(language);
             countryRepository.save(country);
 
-            RequestCash.clear();
 
             return "Successful added!";
         } else {
@@ -98,7 +72,6 @@ public class LanguageService {
             country.getLanguages().remove(language);
             languageRepository.save(language);
             countryRepository.save(country);
-            RequestCash.clear();
 
             return "Successful deleted!";
         } else {
@@ -124,7 +97,6 @@ public class LanguageService {
                 countryRepository.save(country);
             }
         }
-        RequestCash.clear();
 
         return "Successful created!";
     }
@@ -141,7 +113,6 @@ public class LanguageService {
             }
             languageRepository.delete(language);
 
-            RequestCash.clear();
 
             return "Successful deleted!";
         } else {

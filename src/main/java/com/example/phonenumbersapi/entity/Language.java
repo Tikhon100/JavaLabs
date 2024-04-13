@@ -9,10 +9,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.CascadeType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@Setter
+@Getter
 @Entity
 @Table(name = "languages")
 public class Language {
@@ -27,4 +32,8 @@ public class Language {
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnoreProperties("languages")
     private List<Country> countries;
+
+    public Language(String name){
+        this.name = name;
+    }
 }

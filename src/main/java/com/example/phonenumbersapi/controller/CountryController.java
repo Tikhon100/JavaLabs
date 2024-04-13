@@ -79,6 +79,14 @@ public final class CountryController {
         return countryService.deleteLanguageFromCountry(id, languageId);
     }
 
+    @GetMapping("/exception")
+    public String exceptionEndPoint(final @RequestParam("flag") int flag) {
+        if (flag == 1) {
+            throw new IllegalArgumentException("Value 1 is not allowed");
+        }
+        return "Have a nice day!";
+    }
+
     @Operation(summary = "Удалить страну",
             description = "Запрос удаляет страну вместе с ее телефоными кодами, но оставляет языки")
     @DeleteMapping("/delete/{id}")

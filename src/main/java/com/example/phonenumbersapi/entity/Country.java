@@ -15,11 +15,16 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@Setter
+@Getter
 @Entity
 @Table(name = "countries")
 public final class Country {
@@ -50,5 +55,9 @@ public final class Country {
     @Override
     public String toString() {
         return name;
+    }
+
+    public Country(String name) {
+        this.name = name;
     }
 }

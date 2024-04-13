@@ -1,7 +1,6 @@
 package com.example.phonenumbersapi.service;
 
 import com.example.phonenumbersapi.aspect.Logged;
-import com.example.phonenumbersapi.cashe.RequestCash;
 
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
@@ -14,17 +13,12 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 
 @Service
 @AllArgsConstructor
 public class CountryService {
-    private static final String ALL_COUNTRIES_REQUEST = "http://localhost:8080/api/v1/country/all";
-    private static final String COUNTRY_BY_ID_REQUEST = "http://localhost:8080/api/v1/country/";
 
     private CountryRepository countryRepository;
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
@@ -32,31 +26,12 @@ public class CountryService {
 
     @Logged
     public List<Country> getAllCountries() {
-        if (RequestCash.containsKey(ALL_COUNTRIES_REQUEST)) {
-
-            return (List<Country>) RequestCash.get(ALL_COUNTRIES_REQUEST);
-        } else {
-            List<Country> countryList = countryRepository.findAll();
-            RequestCash.put(ALL_COUNTRIES_REQUEST, countryList);
-
-            return countryList;
-        }
-
+        return countryRepository.findAll();
     }
 
     @Logged
     public Country getCountryById(final Long id) {
-        if (RequestCash.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
-
-            return ((List<Country>) RequestCash.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
-        } else {
-
-            Country country = findCountryById(id);
-            List<Country> countryList = new ArrayList<>();
-            countryList.add(country);
-            RequestCash.put(COUNTRY_BY_ID_REQUEST + id, countryList);
-            return country;
-        }
+        return findCountryById(id).get();
     }
 
     @Logged
@@ -104,19 +79,15 @@ public class CountryService {
         // Сохраняем страну в базу данных
         countryRepository.save(country);
 
-        RequestCash.clear();
-
         return "Successfully saved!";
     }
 
     @Logged
     public String updateNameCountry(final Long id, final String name) {
-        Country country = findCountryById(id);
-        if (country != null) {
-            country.setName(name);
-            countryRepository.save(country);
-
-            RequestCash.clear();
+        Optional<Country> country = findCountryById(id);
+        if (country.isPresent()) {
+            country.get().setName(name);
+            countryRepository.save(country.get());
 
             return "Successful updated!";
         } else {
@@ -126,16 +97,14 @@ public class CountryService {
 
     @Logged
     public String addLanguageToCountry(final Long countryId, final Long languageId) {
-        Country country = findCountryById(countryId);
-        Language language = findLanguageById(languageId);
+        Optional<Country> country = findCountryById(countryId);
+        Optional<Language> language = findLanguageById(languageId);
 
-        if (country != null && language != null && !country.getLanguages().contains(language)) {
-            language.getCountries().add(country);
-            country.getLanguages().add(language);
-            languageRepository.save(language);
-            countryRepository.save(country);
-
-            RequestCash.clear();
+        if (country.isPresent() && language.isPresent()  && !country.get().getLanguages().contains(language.get())) {
+            language.get().getCountries().add(country.get());
+            country.get().getLanguages().add(language.get());
+            languageRepository.save(language.get());
+            countryRepository.save(country.get());
 
             return "Successful added!";
         } else {
@@ -145,17 +114,16 @@ public class CountryService {
 
     @Logged
     public String deleteLanguageFromCountry(final Long countryId, final Long languageId)  {
-        Country country = findCountryById(countryId);
-        Language language = findLanguageById(languageId);
+        Optional<Country> country = findCountryById(countryId);
+        Optional<Language> language = findLanguageById(languageId);
 
-        if (country != null && language != null && country.getLanguages().contains(language)
-                && language.getCountries().contains(country)) {
-            language.getCountries().remove(country);
-            country.getLanguages().remove(language);
-            languageRepository.save(language);
-            countryRepository.save(country);
+        if (country.isPresent() && language.isPresent() && country.get().getLanguages().contains(language.get())
+                && language.get().getCountries().contains(country.get())) {
+            language.get().getCountries().remove(country.get());
+            country.get().getLanguages().remove(language.get());
+            languageRepository.save(language.get());
+            countryRepository.save(country.get());
 
-            RequestCash.clear();
             return "Successful! deleted";
         }
         return "Wrong id or these country do not contains this language";
@@ -163,9 +131,10 @@ public class CountryService {
 
     @Logged
     public String addPhoneNumberCode(final Long id, final String code) {
-        Country country = findCountryById(id);
+        Optional<Country> optionalCountry = findCountryById(id);
 
-        if (country != null) {
+        if (optionalCountry.isPresent()) {
+            Country country = optionalCountry.get();
             PhoneNumberCode phoneNumberCode = new PhoneNumberCode();
             phoneNumberCode.setCode(code);
             phoneNumberCode.setCountry(country);
@@ -174,9 +143,9 @@ public class CountryService {
             phoneNumberCodeRepository.save(phoneNumberCode);
             countryRepository.save(country);
 
-            RequestCash.clear();
-            return "Phone number code successful added!";
+            return "Phone number code successfully added!";
         }
+
         return "Error in id";
     }
 
@@ -194,18 +163,15 @@ public class CountryService {
 
         countryRepository.delete(country);
 
-        RequestCash.clear();
         phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
     }
 
-    private Country findCountryById(final Long id) {
-       return countryRepository.findById(id).orElseThrow(() ->
-               new EntityNotFoundException("Country with id: " + id + " not found"));
+    private Optional<Country> findCountryById(Long id) {
+        return countryRepository.findById(id);
     }
 
-    private Language findLanguageById(final Long id) {
-        return languageRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Language with id: " + id + " not found"));
+    private Optional <Language> findLanguageById(final Long id) {
+        return languageRepository.findById(id);
     }
 
 }

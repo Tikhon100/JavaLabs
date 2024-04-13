@@ -74,6 +74,16 @@ public final class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Response> handleIllegalArgumentException(final IllegalArgumentException ex) {
+        Response response = new Response();
+        response.setMessage(ex.getLocalizedMessage());
+        response.setDescription("Bad args? Read the documentation");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Response> handleValidationExceptions(final Exception ex) {

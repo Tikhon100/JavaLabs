@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -53,4 +54,15 @@ public class PhoneNumberCodeController {
     public String deletePhoneNumberCode(final @PathVariable Long id) {
         return phoneNumberCodeService.deletePhoneNumberCode(id);
     }
+
+    @PostMapping("/addListPhoneNumberCodes")
+    public String  addPhoneNumberCodesInOneCountry(@RequestBody List<PhoneNumberCode> phoneNumberCodeList, @RequestParam Long countryId) {
+        return phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList,countryId);
+    }
+
+    @PostMapping("/addListPhoneNumberCodes2")
+    public String  addPhoneNumberCodesInDifCountries(@RequestBody List<PhoneNumberCode> phoneNumberCodeList) {
+        return phoneNumberCodeService.addListPhoneNumberCode(phoneNumberCodeList);
+    }
+
 }
