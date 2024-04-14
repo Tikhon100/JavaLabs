@@ -159,6 +159,7 @@
 								<exclude>com/example/phonenumbersapi/controller/**</exclude>
 								<exclude>com/example/phonenumbersapi/entity/**</exclude>
 								<exclude>com/example/phonenumbersapi/repository/**</exclude>
+								<exclude>com/example/phonenumbersapi/counter/**</exclude>
 							</excludes>
 						</configuration>
 					</execution>

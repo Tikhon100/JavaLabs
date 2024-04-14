@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.service;
 
+import com.example.phonenumbersapi.aspect.Counting;
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
 import com.example.phonenumbersapi.repository.CountryRepository;
@@ -22,16 +23,16 @@ public class LanguageService {
     private CountryRepository countryRepository;
 
 
-
+    @Counting
     public List<Language> getAllLanguages() {
         return languageRepository.findAll();
     }
-
+    @Counting
     public Language getLanguageById(final Long id) {
         Optional<Language> language = findLanguageById(id);
         return language.orElse(null);
     }
-
+    @Counting
     public String updateLanguageName(final Long id, final String name) {
         if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
@@ -48,7 +49,7 @@ public class LanguageService {
         }
     }
 
-
+    @Counting
     public String addCountryToLanguage(final Long languageId, final Long countryId) {
         Optional<Language> language = findLanguageById(languageId);
         Optional<Country> country = findCountryById(countryId);
@@ -64,7 +65,7 @@ public class LanguageService {
             return "Wrong at id (it must have been country id or language id)";
         }
     }
-
+    @Counting
     public String deleteCountryFromLanguage(final Long languageId, final Long countryId) {
         Optional<Language> language = findLanguageById(languageId);
         Optional<Country> country = findCountryById(countryId);
@@ -80,7 +81,7 @@ public class LanguageService {
             return "Wrong at id (it must have been country id or language id)";
         }
     }
-
+    @Counting
     public String createLanguage(final String name, final List<Long> countryIds) {
         if (languageRepository.findByName(name) != null) {
             return "Bad request, language with such name already exist";
@@ -103,7 +104,7 @@ public class LanguageService {
         return "Successful created!";
     }
 
-
+    @Counting
     public String deleteLanguageById(final Long id) {
         Optional<Language> language = findLanguageById(id);
 

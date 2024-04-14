@@ -1,5 +1,6 @@
 package com.example.phonenumbersapi.service;
 
+import com.example.phonenumbersapi.aspect.Counting;
 import com.example.phonenumbersapi.entity.Country;
 
 import com.example.phonenumbersapi.entity.PhoneNumberCode;
@@ -23,15 +24,15 @@ public class PhoneNumberCodeService {
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private CountryRepository countryRepository;
 
-
+    @Counting
     public List<PhoneNumberCode> getAllPhoneNumberCodes() {
         return phoneNumberCodeRepository.findAll();
     }
-
+    @Counting
     public PhoneNumberCode getPhoneNumberCodeById(final Long id) {
         return findPhoneNumberCodeById(id);
     }
-
+    @Counting
     public String createPhoneNumberCode(final Long countryId, final String code) {
         Country country = findCountryById(countryId);
         if (country == null) {
@@ -50,7 +51,7 @@ public class PhoneNumberCodeService {
             return "Successful created!";
         }
     }
-
+    @Counting
     public String updatePhoneNumberCode(final Long id, final String code) {
         PhoneNumberCode phoneNumberCode = findPhoneNumberCodeById(id);
         if (phoneNumberCode == null) {
@@ -64,7 +65,7 @@ public class PhoneNumberCodeService {
             return "Successful updated!";
         }
     }
-
+    @Counting
     public String deletePhoneNumberCode(final Long id) {
         Optional<PhoneNumberCode> optionalPhoneNumberCode = phoneNumberCodeRepository.findById(id);
         if (optionalPhoneNumberCode.isPresent()) {
@@ -75,7 +76,7 @@ public class PhoneNumberCodeService {
             return "Object with id " + id + " not found";
         }
     }
-
+    @Counting
     public String addListPhoneNumberCode(List<PhoneNumberCode> phoneNumberCodeList) {
         phoneNumberCodeList.stream()
                 .forEach(phoneNumberCode -> {
@@ -98,7 +99,7 @@ public class PhoneNumberCodeService {
                 });
         return "Successfully";
     }
-
+    @Counting
     public String addListPhoneNumberCode(List<PhoneNumberCode> phoneNumberCodeList, Long countryId) {
         Country country = findCountryById(countryId);
 
@@ -106,21 +107,12 @@ public class PhoneNumberCodeService {
             return "Country not found!";
         } else {
             phoneNumberCodeList.stream()
+                    .filter(phoneNumberCode -> country.getPhoneNumberCodes().stream()
+                            .noneMatch(pnc -> pnc.getCode().equals(phoneNumberCode.getCode())))
                     .forEach(phoneNumberCode -> {
-                        List<PhoneNumberCode> countryCodeList = country.getPhoneNumberCodes();
-                        int flag=0;
-                        for (PhoneNumberCode pnc : countryCodeList){
-                            if (pnc.getCode().equals(phoneNumberCode.getCode())) {
-                                flag = 1;
-                                break;
-                            }
-                        }
-
-                        if (flag!=1){
-                            country.getPhoneNumberCodes().add(phoneNumberCode);
-                            phoneNumberCode.setCountry(country);
-                            phoneNumberCodeRepository.save(phoneNumberCode);
-                        }
+                        country.getPhoneNumberCodes().add(phoneNumberCode);
+                        phoneNumberCode.setCountry(country);
+                        phoneNumberCodeRepository.save(phoneNumberCode);
                     });
 
             countryRepository.save(country);

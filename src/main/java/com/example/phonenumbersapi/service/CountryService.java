@@ -1,6 +1,6 @@
 package com.example.phonenumbersapi.service;
 
-import com.example.phonenumbersapi.aspect.Logged;
+import com.example.phonenumbersapi.aspect.Counting;
 
 import com.example.phonenumbersapi.entity.Country;
 import com.example.phonenumbersapi.entity.Language;
@@ -24,23 +24,24 @@ public class CountryService {
     private PhoneNumberCodeRepository phoneNumberCodeRepository;
     private LanguageRepository languageRepository;
 
-    @Logged
+
+    @Counting
     public List<Country> getAllCountries() {
         return countryRepository.findAll();
     }
 
-    @Logged
+    @Counting
     public Country getCountryById(final Long id) {
         Optional <Country> country = findCountryById(id);
         return country.orElse(null);
     }
-    @Logged
+    @Counting
     public List<Country> getCountriesByLanguages(final List<String> languages) {
 
         return countryRepository.getCountriesByLanguages(languages);
     }
 
-    @Logged
+    @Counting
     @Transactional
     public String createCountry(final Country country) {
        Set<String> languageNames = new HashSet<>();
@@ -83,7 +84,7 @@ public class CountryService {
         return "Successfully saved!";
     }
 
-    @Logged
+    @Counting
     public String updateNameCountry(final Long id, final String name) {
         Optional<Country> country = findCountryById(id);
         if (country.isPresent()) {
@@ -96,7 +97,7 @@ public class CountryService {
         }
     }
 
-    @Logged
+    @Counting
     public String addLanguageToCountry(final Long countryId, final Long languageId) {
         Optional<Country> country = findCountryById(countryId);
         Optional<Language> language = findLanguageById(languageId);
@@ -113,7 +114,7 @@ public class CountryService {
         }
     }
 
-    @Logged
+    @Counting
     public String deleteLanguageFromCountry(final Long countryId, final Long languageId)  {
         Optional<Country> country = findCountryById(countryId);
         Optional<Language> language = findLanguageById(languageId);
@@ -130,7 +131,7 @@ public class CountryService {
         return "Wrong id or these country do not contains this language";
     }
 
-    @Logged
+    @Counting
     public String addPhoneNumberCode(final Long id, final String code) {
         Optional<Country> optionalCountry = findCountryById(id);
 
@@ -150,7 +151,7 @@ public class CountryService {
         return "Error in id";
     }
 
-    @Logged
+    @Counting
     @Transactional
     public void deleteCountry(final Long countryId) {
         Country country = countryRepository.findById(countryId)
