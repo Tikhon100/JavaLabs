@@ -20,5 +20,8 @@ public class RequestCounter {
     public static void reset() {
         counter.set(0);
     }
+
+    private RequestCounter() {
+    }
 }
 

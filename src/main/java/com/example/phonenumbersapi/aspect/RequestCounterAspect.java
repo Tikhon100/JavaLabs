@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class RequestCounterAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestCounterAspect.class);
 
     @Pointcut("@annotation(com.example.phonenumbersapi.aspect.Counting)")
     public void methodsWithRequestCounterAnnotation() {

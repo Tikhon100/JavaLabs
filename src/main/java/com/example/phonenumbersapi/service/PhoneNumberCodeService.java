@@ -7,6 +7,7 @@ import com.example.phonenumbersapi.entity.PhoneNumberCode;
 import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -77,6 +78,7 @@ public class PhoneNumberCodeService {
         }
     }
     @Counting
+    @Transactional
     public String addListPhoneNumberCode(List<PhoneNumberCode> phoneNumberCodeList) {
         phoneNumberCodeList.stream()
                 .forEach(phoneNumberCode -> {
