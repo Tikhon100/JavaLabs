@@ -119,7 +119,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.example.PhoneNumbersApiApplication</mainClass>
+					<mainClass>com.example.phonenumbersapi.PhoneNumbersApiApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
