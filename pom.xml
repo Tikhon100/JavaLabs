@@ -8,7 +8,7 @@
 		<version>3.2.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.example.phonenumbersapi</groupId>
 	<artifactId>PhoneNumbersApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>PhoneNumbersApi</name>
