@@ -10,9 +10,9 @@ RUN mvn package -DskipTests
 FROM eclipse-temurin:21-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/PhoneNumbersApi-0.0.1-SNAPSHOT.jar spring-boot-javalab.jar
+COPY --from=build /app/target/PhoneNumbersApi-0.0.1-SNAPSHOT.jar PhoneNumbersApi.jar
 
-CMD ["java", "-jar", "spring-boot-javalab.jar"]
+CMD ["java", "-jar", "PhoneNumbersApi.jar"]
 
 
 
