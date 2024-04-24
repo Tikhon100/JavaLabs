@@ -7,20 +7,16 @@ import com.example.phonenumbersapi.service.LanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @MyExceptionHandler
 @AllArgsConstructor
 @RestController
 @RequestMapping("api/v1/language")
+@CrossOrigin(origins = "*")
 public class LanguageController {
 
     private final LanguageService languageService;
@@ -33,20 +29,20 @@ public class LanguageController {
 
     @Operation(summary = "Получить язык по id")
     @GetMapping("/{id}")
-    public Language getLanguageById(final @PathVariable Long id) {
+    public ResponseEntity<Language> getLanguageById(final @PathVariable Long id) {
         return languageService.getLanguageById(id);
     }
 
     @Operation(summary = "Создать язык",
             description = "Запрос добавляет язык в базу данных приложения")
     @PostMapping("/create/")
-    public String createLanguage(final @RequestParam String name, final @RequestParam(required = false) List<Long> countryIds) {
+    public ResponseEntity<String> createLanguage(final @RequestParam String name, final @RequestParam(required = false) List<Long> countryIds) {
         return languageService.createLanguage(name, countryIds);
     }
 
     @Operation(summary = "Изменить имя языка")
     @PatchMapping("/changeName/{id}")
-    public String updateLanguageName(final @PathVariable Long id, final @RequestParam String name) {
+    public ResponseEntity<String> updateLanguageName(final @PathVariable Long id, final @RequestParam String name) {
         return languageService.updateLanguageName(id, name);
     }
 
@@ -64,7 +60,7 @@ public class LanguageController {
 
     @Operation(summary = "Удалить язык из базы данных")
     @DeleteMapping("/delete/{id}")
-    public String deleteLanguageById(final @PathVariable Long id) {
+    public ResponseEntity<String> deleteLanguageById(final @PathVariable Long id) {
         return languageService.deleteLanguageById(id);
     }
 }

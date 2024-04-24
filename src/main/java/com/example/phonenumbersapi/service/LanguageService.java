@@ -7,6 +7,7 @@ import com.example.phonenumbersapi.repository.CountryRepository;
 import com.example.phonenumbersapi.repository.LanguageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,24 +29,27 @@ public class LanguageService {
         return languageRepository.findAll();
     }
     @Counting
-    public Language getLanguageById(final Long id) {
+    public ResponseEntity<Language> getLanguageById(final Long id) {
         Optional<Language> language = findLanguageById(id);
-        return language.orElse(null);
+        if (language.isPresent()){
+            return ResponseEntity.ok().body(language.get());
+        }
+        return ResponseEntity.notFound().build();
     }
     @Counting
-    public String updateLanguageName(final Long id, final String name) {
+    public ResponseEntity<String> updateLanguageName(final Long id, final String name) {
         if (languageRepository.findByName(name) != null) {
-            return "Bad request, language with such name already exist";
+            return ResponseEntity.badRequest().body("Language with such name already exist");
         }
 
         Optional<Language> language = findLanguageById(id);
         if (language.isEmpty()) {
-            return "Error, wrong id";
+            return ResponseEntity.badRequest().body("Error, wrong id");
         } else {
             language.get().setName(name);
             languageRepository.save(language.get());
 
-            return "Successful updated!";
+            return ResponseEntity.ok().body("Successfully");
         }
     }
 
@@ -82,9 +86,9 @@ public class LanguageService {
         }
     }
     @Counting
-    public String createLanguage(final String name, final List<Long> countryIds) {
+    public ResponseEntity<String> createLanguage(final String name, final List<Long> countryIds) {
         if (languageRepository.findByName(name) != null) {
-            return "Bad request, language with such name already exist";
+            ResponseEntity.badRequest().body("Язык уже есть");
         }
 
         Language newLanguage = new Language();
@@ -101,11 +105,11 @@ public class LanguageService {
             }
         }
 
-        return "Successful created!";
+        return ResponseEntity.ok().body("Успешно");
     }
 
     @Counting
-    public String deleteLanguageById(final Long id) {
+    public ResponseEntity<String> deleteLanguageById(final Long id) {
         Optional<Language> language = findLanguageById(id);
 
         if (language.isPresent()) {
@@ -117,9 +121,9 @@ public class LanguageService {
             languageRepository.delete(language.get());
 
 
-            return "Successful deleted!";
+            return ResponseEntity.ok().body("Успешно");
         } else {
-            return "object not found";
+            return ResponseEntity.notFound().build();
         }
     }
 

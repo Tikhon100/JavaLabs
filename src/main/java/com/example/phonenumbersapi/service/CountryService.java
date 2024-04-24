@@ -11,6 +11,7 @@ import com.example.phonenumbersapi.repository.PhoneNumberCodeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -85,15 +86,15 @@ public class CountryService {
     }
 
     @Counting
-    public String updateNameCountry(final Long id, final String name) {
+    public ResponseEntity<Country> updateNameCountry(final Long id, final String name) {
         Optional<Country> country = findCountryById(id);
         if (country.isPresent()) {
             country.get().setName(name);
             countryRepository.save(country.get());
 
-            return "Successful updated!";
+            return ResponseEntity.ok().body(country.get());
         } else {
-            return "Error id";
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -153,19 +154,20 @@ public class CountryService {
 
     @Counting
     @Transactional
-    public void deleteCountry(final Long countryId) {
-        Country country = countryRepository.findById(countryId)
-                .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + countryId));
-        List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>(country.getPhoneNumberCodes());
-
-        country.getLanguages().forEach(language ->
-            language.getCountries().remove(country)
-        );
-        country.getLanguages().clear();
-
-        countryRepository.delete(country);
-
-        phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
+    public ResponseEntity<String> deleteCountry(final Long countryId) {
+        Optional<Country> optionalCountry = findCountryById(countryId);
+        if (optionalCountry.isPresent()){
+            Country country = optionalCountry.get();
+            List<PhoneNumberCode> phoneNumberCodes = new ArrayList<>(country.getPhoneNumberCodes());
+            country.getLanguages().forEach(language ->
+                    language.getCountries().remove(country)
+            );
+            country.getLanguages().clear();
+            countryRepository.delete(country);
+            phoneNumberCodeRepository.deleteAll(phoneNumberCodes);
+            return ResponseEntity.ok().body("Successfully delete");
+        }
+        return ResponseEntity.notFound().build();
     }
     private Optional<Country> findCountryById(Long id) {
         return countryRepository.findById(id);

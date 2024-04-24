@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,14 +31,18 @@ public class PhoneNumberCodeService {
         return phoneNumberCodeRepository.findAll();
     }
     @Counting
-    public PhoneNumberCode getPhoneNumberCodeById(final Long id) {
-        return findPhoneNumberCodeById(id);
+    public ResponseEntity<PhoneNumberCode> getPhoneNumberCodeById(final Long id) {
+        Optional<PhoneNumberCode> phoneNumberCode = phoneNumberCodeRepository.findById(id);
+        if (phoneNumberCode.isPresent()){
+            return ResponseEntity.ok().body(phoneNumberCode.get());
+        }
+        else return ResponseEntity.notFound().build();
     }
     @Counting
-    public String createPhoneNumberCode(final Long countryId, final String code) {
+    public ResponseEntity<String> createPhoneNumberCode(final Long countryId, final String code) {
         Country country = findCountryById(countryId);
         if (country == null) {
-            return "Wrong id, operation failed";
+            return ResponseEntity.notFound().build();
         } else {
             PhoneNumberCode phoneNumberCode = new PhoneNumberCode();
             phoneNumberCode.setCode(code);
@@ -49,32 +54,30 @@ public class PhoneNumberCodeService {
             countryRepository.save(country);
 
 
-            return "Successful created!";
+            return ResponseEntity.ok().body("Successfully");
         }
     }
     @Counting
-    public String updatePhoneNumberCode(final Long id, final String code) {
-        PhoneNumberCode phoneNumberCode = findPhoneNumberCodeById(id);
-        if (phoneNumberCode == null) {
-            return "Object not found";
+    public ResponseEntity<String> updatePhoneNumberCode(final Long id, final String code) {
+        Optional<PhoneNumberCode> phoneNumberCode = phoneNumberCodeRepository.findById(id);
+        if (phoneNumberCode.isEmpty()) {
+            return ResponseEntity.notFound().build();
         } else {
             if (code != null) {
-                phoneNumberCode.setCode(code);
-                phoneNumberCodeRepository.save(phoneNumberCode);
+                phoneNumberCode.get().setCode(code);
+                phoneNumberCodeRepository.save(phoneNumberCode.get());
             }
-
-            return "Successful updated!";
+            return ResponseEntity.ok().body("Succesfull!");
         }
     }
     @Counting
-    public String deletePhoneNumberCode(final Long id) {
+    public ResponseEntity<String> deletePhoneNumberCode(final Long id) {
         Optional<PhoneNumberCode> optionalPhoneNumberCode = phoneNumberCodeRepository.findById(id);
         if (optionalPhoneNumberCode.isPresent()) {
             phoneNumberCodeRepository.deleteById(id);
-
-            return "Successful deleted";
+            return ResponseEntity.ok().body("Successfully");
         } else {
-            return "Object with id " + id + " not found";
+            return ResponseEntity.notFound().build();
         }
     }
     @Counting
@@ -127,8 +130,7 @@ public class PhoneNumberCodeService {
         return countryRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Country with id: " + id + " not found"));
     }
-    private PhoneNumberCode findPhoneNumberCodeById(final Long id) {
-        return phoneNumberCodeRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(("Phone number code with id" + id + "not found")));
+    private Optional<PhoneNumberCode> findPhoneNumberCodeById(final Long id) {
+        return phoneNumberCodeRepository.findById(id);
     }
 }

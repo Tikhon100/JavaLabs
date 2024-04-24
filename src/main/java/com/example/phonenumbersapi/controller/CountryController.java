@@ -6,15 +6,8 @@ import com.example.phonenumbersapi.service.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 
@@ -23,6 +16,7 @@ import java.util.List;
 @MyExceptionHandler
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("api/v1/country")
 public final class CountryController {
     private final CountryService countryService;
@@ -57,7 +51,7 @@ public final class CountryController {
 
     @Operation(summary = "Обновить имя страны")
     @PatchMapping("/updateName/{id}")
-    public String updateNameCountry(final @PathVariable Long id, final @RequestParam String name) {
+    public ResponseEntity<Country> updateNameCountry(final @PathVariable Long id, final @RequestParam String name) {
         return countryService.updateNameCountry(id, name);
     }
 
@@ -90,8 +84,7 @@ public final class CountryController {
     @Operation(summary = "Удалить страну",
             description = "Запрос удаляет страну вместе с ее телефоными кодами, но оставляет языки")
     @DeleteMapping("/delete/{id}")
-    public String deleteCountry(final @PathVariable Long id) {
-        countryService.deleteCountry(id);
-        return "Successfully deleted";
+    public ResponseEntity<String> deleteCountry(final @PathVariable Long id) {
+        return countryService.deleteCountry(id);
     }
 }
