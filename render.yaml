@@ -6,16 +6,16 @@ services:
     plan: free
     healthCheckPath: /
     envVars:
-      - key: SPRING_DB_USER
+      - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: database
           property: user
-      - key: SPRING_DB_PASSWORD
+      - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
           name: database
           property: password
-      - key: SPRING_DB_URL
-        value: postgresql://${SPRING_DB_HOST}:${SPRING_DB_PORT}/${SPRING_DB_DATABASE}
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://${SPRING_DB_HOST}:${SPRING_DB_PORT}/${SPRING_DB_DATABASE}
 
 databases:
   - name: database
