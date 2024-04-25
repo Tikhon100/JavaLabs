@@ -14,7 +14,7 @@
 	<name>PhoneNumbersApi</name>
 	<description>PhoneNumbersApi</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<sonar.organization>tikhon100</sonar.organization>
 		<hibernate.version>6.4.4.Final</hibernate.version>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
