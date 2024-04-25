@@ -1,23 +1,25 @@
 services:
-  - type: web
-    name: web
-    runtime: docker
-    region: frankfurt
-    plan: free
-    healthCheckPath: /
-    envVars:
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: database
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: database
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${SPRING_DB_HOST}:${SPRING_DB_PORT}/${SPRING_DB_DATABASE}
+- type: web
+  name: web
+  runtime: docker
+  repo: https://github.com/Tikhon100/JavaLabs
+  plan: free
+  envVars:
+  - key: SPRING_DB_DATABASE
+    sync: false
+  - key: SPRING_DB_PORT
+    sync: false
+  - key: SPRING_DB_HOST
+    sync: false
+  - key: SPRING_DATASOURCE_USERNAME
+    sync: false
+  - key: SPRING_DATASOURCE_URL
+    sync: false
+  - key: SPRING_DATASOURCE_PASSWORD
+    sync: false
+  region: frankfurt
+  healthCheckPath: /
+  dockerContext: .
+  dockerfilePath: ./Dockerfile
+version: "1"
 
-databases:
-  - name: database
-    region: frankfurt
-    plan: free
