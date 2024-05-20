@@ -1,25 +1,11 @@
+# Exported from Render on 2024-05-20T16:17:39Z
 services:
 - type: web
-  name: web
+  name: JavaLabs
   runtime: docker
   repo: https://github.com/Tikhon100/JavaLabs
   plan: free
-  envVars:
-  - key: SPRING_DB_DATABASE
-    sync: false
-  - key: SPRING_DB_PORT
-    sync: false
-  - key: SPRING_DB_HOST
-    sync: false
-  - key: SPRING_DATASOURCE_USERNAME
-    sync: false
-  - key: SPRING_DATASOURCE_URL
-    sync: false
-  - key: SPRING_DATASOURCE_PASSWORD
-    sync: false
   region: frankfurt
-  healthCheckPath: /
   dockerContext: .
   dockerfilePath: ./Dockerfile
 version: "1"
-
