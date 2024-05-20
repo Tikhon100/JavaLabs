@@ -59,4 +59,4 @@ https://sonarcloud.io/project/overview?id=Tikhon100_JavaLabs2
 
 
 <h2>Контакты разработчика</h2>
-Все вопросы можно задать по почте tikhonkananchuk@gmail.com
+Все вопросы можно задать по почте tikhonkananchuk@gmail.com, по поводу лаб не писать!!
